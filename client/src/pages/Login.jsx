@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import api from "../lib/api";
 import { useAuth } from "../context/AuthContext";
 import {
@@ -14,21 +14,46 @@ import {
   EyeOff,
   User,
   ArrowRight,
+  ArrowLeft,
   Sparkles,
   Zap,
   TrendingUp,
 } from "lucide-react";
 
-const DEMO_USERS = {
-  ADMIN: { email: "anchal@gmail.com", password: "anchal@34" },
-  FACULTY: { email: "sanu@gmail.com", password: "sanu@34" },
-  STUDENT: { email: "anu@gmail.com", password: "anu@123" },
-};
-
 const roles = [
-  { name: "ADMIN", icon: ShieldCheck },
-  { name: "FACULTY", icon: Users },
-  { name: "STUDENT", icon: BookOpen },
+  {
+    name: "ADMIN",
+    icon: ShieldCheck,
+    active:
+      "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-200/50",
+    iconColor: "text-blue-600",
+    focus: "focus:border-blue-400 focus:ring-4 focus:ring-blue-100",
+    accent: "text-blue-600",
+    button:
+      "bg-gradient-to-r from-blue-600 to-indigo-600 shadow-blue-200/50",
+  },
+  {
+    name: "FACULTY",
+    icon: Users,
+    active:
+      "bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md shadow-emerald-200/50",
+    iconColor: "text-emerald-600",
+    focus: "focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100",
+    accent: "text-emerald-600",
+    button:
+      "bg-gradient-to-r from-emerald-600 to-teal-600 shadow-emerald-200/50",
+  },
+  {
+    name: "STUDENT",
+    icon: BookOpen,
+    active:
+      "bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-md shadow-orange-200/50",
+    iconColor: "text-orange-600",
+    focus: "focus:border-orange-400 focus:ring-4 focus:ring-orange-100",
+    accent: "text-orange-600",
+    button:
+      "bg-gradient-to-r from-orange-500 to-amber-500 shadow-orange-200/50",
+  },
 ];
 
 const Login = () => {
@@ -44,6 +69,8 @@ const Login = () => {
 
   const { login } = useAuth();
   const navigate = useNavigate();
+
+  const selectedRole = roles.find((item) => item.name === role);
 
   const handleRoleChange = (item) => {
     setRole(item);
@@ -63,23 +90,6 @@ const Login = () => {
     if (selectedRole === "ADMIN") navigate("/admin");
     else if (selectedRole === "FACULTY") navigate("/faculty");
     else navigate("/student");
-  };
-
-  const handleDemoLogin = async (demoRole) => {
-    setError("");
-    setSuccess("");
-    setLoading(true);
-
-    try {
-      await handleLogin(demoRole, DEMO_USERS[demoRole]);
-    } catch (err) {
-      setError(
-        err.response?.data?.message ||
-          `Demo ${demoRole.toLowerCase()} login failed. Check demo credentials.`
-      );
-    } finally {
-      setLoading(false);
-    }
   };
 
   const handleSubmit = async (e) => {
@@ -117,7 +127,6 @@ const Login = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#f5f2ff] via-[#f8f7ff] to-[#edf4ff] p-3 sm:p-5 lg:p-8">
       <div className="relative mx-auto grid min-h-[calc(100vh-2rem)] max-w-[1500px] overflow-hidden rounded-[28px] border border-white/80 bg-[#f7f5ff] shadow-2xl shadow-violet-200/40 lg:grid-cols-[1.05fr_0.95fr]">
-
         {/* LEFT CAMPUS PANEL */}
         <section className="relative hidden overflow-hidden lg:flex">
           <img
@@ -126,17 +135,14 @@ const Login = () => {
             className="absolute inset-0 h-full w-full object-cover"
           />
 
-          {/* Balanced image colors */}
           <div className="absolute inset-0 bg-gradient-to-br from-[#786cc2]/55 via-[#8378c4]/30 to-[#789bd4]/25" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#302b60]/65 via-transparent to-[#786cc2]/10" />
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-[#e8e0ff]/15" />
 
-          {/* Image glow */}
           <div className="absolute -left-24 top-36 h-72 w-72 rounded-full bg-[#c4a8ff]/25 blur-3xl" />
           <div className="absolute right-0 top-20 h-72 w-72 rounded-full bg-[#a8d4ff]/25 blur-3xl" />
 
           <div className="relative z-10 flex w-full flex-col justify-between p-10 xl:p-14">
-            {/* Brand */}
             <div className="flex items-center gap-3">
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/30 bg-white/20 text-white backdrop-blur-md">
                 <GraduationCap size={28} />
@@ -152,7 +158,6 @@ const Login = () => {
               </div>
             </div>
 
-            {/* Main content */}
             <div className="max-w-xl">
               <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/15 px-4 py-2 text-sm text-white backdrop-blur-lg">
                 <Sparkles size={15} className="text-[#ffe1a6]" />
@@ -172,7 +177,6 @@ const Login = () => {
                 administrators.
               </p>
 
-              {/* Feature highlights */}
               <div className="mt-9 flex flex-wrap gap-3">
                 {[
                   { icon: Users, title: "Connect", subtitle: "With everyone" },
@@ -204,8 +208,6 @@ const Login = () => {
 
         {/* RIGHT LOGIN PANEL */}
         <section className="relative flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#f5f2ff] via-[#f8f6ff] to-[#edf4ff] px-5 py-8 sm:px-10 lg:px-12">
-
-          {/* Soft pastel glow */}
           <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-[#d8c8ff]/35 blur-3xl" />
           <div className="pointer-events-none absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-[#b9d9ff]/30 blur-3xl" />
           <div className="pointer-events-none absolute left-0 top-0 h-full w-16 bg-gradient-to-r from-[#d9ccff]/20 to-transparent" />
@@ -224,6 +226,15 @@ const Login = () => {
               </p>
             </div>
 
+            {/* Back to Home */}
+            <Link
+              to="/"
+              className="mb-5 inline-flex items-center gap-2 rounded-lg text-sm font-semibold text-gray-500 transition hover:text-blue-600"
+            >
+              <ArrowLeft size={16} />
+              Back to Home
+            </Link>
+
             {/* Heading */}
             <div className="mb-7">
               <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-[#e4d8ff] bg-white/75 px-3 py-1.5 text-xs font-semibold text-[#8170d9] backdrop-blur-md">
@@ -233,7 +244,15 @@ const Login = () => {
 
               <h2 className="text-3xl font-bold tracking-tight text-gray-900">
                 Sign in to your
-                <span className="block bg-gradient-to-r from-[#8873e8] to-[#a78be8] bg-clip-text text-transparent">
+                <span
+                  className={`block bg-gradient-to-r ${
+                    role === "ADMIN"
+                      ? "from-blue-600 to-indigo-600"
+                      : role === "FACULTY"
+                      ? "from-emerald-600 to-teal-600"
+                      : "from-orange-500 to-amber-500"
+                  } bg-clip-text text-transparent`}
+                >
                   campus portal.
                 </span>
               </h2>
@@ -243,49 +262,23 @@ const Login = () => {
               </p>
             </div>
 
-            {/* Premium login card */}
+            {/* Login card */}
             <div className="rounded-3xl border border-white/90 bg-white/85 p-5 shadow-xl shadow-[#b9a7ef]/20 backdrop-blur-2xl sm:p-7">
-
-              {/* Demo access */}
-              <div className="mb-6 rounded-2xl border border-[#f5d7ba]/80 bg-gradient-to-br from-[#fff8ed] to-[#fff3eb] p-4">
-                <div className="mb-3 flex items-center justify-center gap-2">
-                  <Sparkles size={15} className="text-[#dc9654]" />
-                  <p className="text-xs font-bold uppercase tracking-wider text-[#bd7940]">
-                    Quick Demo Access
-                  </p>
-                </div>
-
-                <div className="grid grid-cols-3 gap-2">
-                  {roles.map(({ name: demoRole, icon: Icon }) => (
-                    <button
-                      key={demoRole}
-                      type="button"
-                      disabled={loading}
-                      onClick={() => handleDemoLogin(demoRole)}
-                      className="flex flex-col items-center gap-1.5 rounded-xl border border-[#f3d8bf] bg-white px-2 py-3 text-xs font-semibold text-gray-700 transition hover:-translate-y-0.5 hover:border-[#e9bd95] hover:bg-[#fff4e8] disabled:opacity-50"
-                    >
-                      <Icon size={18} className="text-[#d99555]" />
-                      {demoRole}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
               {/* Role selector */}
               <p className="mb-3 text-xs font-bold uppercase tracking-wider text-gray-400">
                 Continue as
               </p>
 
-              <div className="mb-6 grid grid-cols-3 gap-2 rounded-2xl border border-[#e9e2ff] bg-[#f3efff]/80 p-1.5">
-                {roles.map(({ name: item, icon: Icon }) => (
+              <div className="mb-6 grid grid-cols-3 gap-2 rounded-2xl border border-gray-100 bg-gray-50 p-1.5">
+                {roles.map(({ name: item, icon: Icon, active: activeClass }) => (
                   <button
                     key={item}
                     type="button"
                     onClick={() => handleRoleChange(item)}
                     className={`flex flex-col items-center gap-1.5 rounded-xl py-3 text-xs font-semibold transition-all ${
                       role === item
-                        ? "bg-gradient-to-r from-[#7968df] to-[#a18aeb] text-white shadow-md shadow-[#c9b9f4]/50"
-                        : "text-gray-500 hover:bg-white/80 hover:text-gray-800"
+                        ? activeClass
+                        : "text-gray-500 hover:bg-white hover:text-gray-800"
                     }`}
                   >
                     <Icon size={18} />
@@ -296,7 +289,7 @@ const Login = () => {
 
               {/* Admin registration */}
               {role === "ADMIN" && (
-                <div className="mb-5 flex rounded-xl border border-[#e7dcff] bg-[#f1edff]/80 p-1">
+                <div className="mb-5 flex rounded-xl border border-blue-100 bg-blue-50/70 p-1">
                   <button
                     type="button"
                     onClick={() => {
@@ -306,7 +299,7 @@ const Login = () => {
                     }}
                     className={`flex-1 rounded-lg py-2.5 text-sm font-semibold ${
                       !isRegister
-                        ? "bg-white text-[#8270dc] shadow-sm"
+                        ? "bg-white text-blue-600 shadow-sm"
                         : "text-gray-500"
                     }`}
                   >
@@ -322,7 +315,7 @@ const Login = () => {
                     }}
                     className={`flex-1 rounded-lg py-2.5 text-sm font-semibold ${
                       isRegister
-                        ? "bg-white text-[#8270dc] shadow-sm"
+                        ? "bg-white text-blue-600 shadow-sm"
                         : "text-gray-500"
                     }`}
                   >
@@ -339,14 +332,17 @@ const Login = () => {
                       Full Name
                     </label>
                     <div className="relative">
-                      <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                      <User
+                        className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+                        size={18}
+                      />
                       <input
                         type="text"
                         required
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         placeholder="Admin name"
-                        className="w-full rounded-xl border border-[#e8e0f8] bg-[#faf8ff] py-3 pl-11 pr-4 outline-none transition focus:border-[#b5a5ee] focus:bg-white focus:ring-4 focus:ring-[#eee9ff]"
+                        className={`w-full rounded-xl border border-gray-200 bg-gray-50 py-3 pl-11 pr-4 outline-none transition focus:bg-white ${selectedRole.focus}`}
                       />
                     </div>
                   </div>
@@ -357,14 +353,17 @@ const Login = () => {
                     Email Address
                   </label>
                   <div className="relative">
-                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                    <Mail
+                      className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+                      size={18}
+                    />
                     <input
                       type="email"
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="you@example.com"
-                      className="w-full rounded-xl border border-[#e8e0f8] bg-[#faf8ff] py-3 pl-11 pr-4 outline-none transition focus:border-[#b5a5ee] focus:bg-white focus:ring-4 focus:ring-[#eee9ff]"
+                      className={`w-full rounded-xl border border-gray-200 bg-gray-50 py-3 pl-11 pr-4 outline-none transition focus:bg-white ${selectedRole.focus}`}
                     />
                   </div>
                 </div>
@@ -374,7 +373,10 @@ const Login = () => {
                     Password
                   </label>
                   <div className="relative">
-                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                    <Lock
+                      className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+                      size={18}
+                    />
                     <input
                       type={showPassword ? "text" : "password"}
                       required
@@ -382,12 +384,12 @@ const Login = () => {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="Enter your password"
-                      className="w-full rounded-xl border border-[#e8e0f8] bg-[#faf8ff] py-3 pl-11 pr-12 outline-none transition focus:border-[#b5a5ee] focus:bg-white focus:ring-4 focus:ring-[#eee9ff]"
+                      className={`w-full rounded-xl border border-gray-200 bg-gray-50 py-3 pl-11 pr-12 outline-none transition focus:bg-white ${selectedRole.focus}`}
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 rounded-lg p-1.5 text-gray-400 hover:bg-[#f0eaff] hover:text-[#8873e8]"
+                      className={`absolute right-3 top-1/2 -translate-y-1/2 rounded-lg p-1.5 text-gray-400 hover:bg-gray-100 ${selectedRole.accent}`}
                       aria-label={showPassword ? "Hide password" : "Show password"}
                     >
                       {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -411,7 +413,7 @@ const Login = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="group flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#7968df] via-[#9180e7] to-[#b09ae9] py-3.5 font-semibold text-white shadow-lg shadow-[#c6b7ed]/40 transition-all hover:-translate-y-0.5 hover:shadow-xl disabled:opacity-60"
+                  className={`group flex w-full items-center justify-center gap-2 rounded-xl py-3.5 font-semibold text-white shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl disabled:opacity-60 ${selectedRole.button}`}
                 >
                   {loading
                     ? "Please wait..."
@@ -420,13 +422,16 @@ const Login = () => {
                     : "Sign In"}
 
                   {!loading && (
-                    <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
+                    <ArrowRight
+                      size={18}
+                      className="transition-transform group-hover:translate-x-1"
+                    />
                   )}
                 </button>
               </form>
 
               <div className="mt-5 flex items-center justify-center gap-2 text-xs text-gray-500">
-                <ShieldCheck size={15} className="text-[#9a88e7]" />
+                <ShieldCheck size={15} className={selectedRole.accent} />
                 Secure College Portal
               </div>
             </div>
