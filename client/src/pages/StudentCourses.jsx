@@ -34,6 +34,37 @@ export default function StudentCourses() {
     fetchCourses();
   }, []);
 
+  const accents = [
+    {
+      border: "border-orange-100",
+      strip: "from-amber-400 to-orange-400",
+      icon: "from-orange-100 to-amber-100 text-orange-700",
+      code: "text-orange-600",
+      department: "border-orange-100",
+    },
+    {
+      border: "border-purple-100",
+      strip: "from-purple-400 to-violet-400",
+      icon: "from-purple-100 to-violet-100 text-purple-700",
+      code: "text-purple-600",
+      department: "border-purple-100",
+    },
+    {
+      border: "border-emerald-100",
+      strip: "from-emerald-400 to-teal-400",
+      icon: "from-emerald-100 to-teal-100 text-emerald-700",
+      code: "text-emerald-700",
+      department: "border-emerald-100",
+    },
+    {
+      border: "border-blue-100",
+      strip: "from-blue-400 to-indigo-400",
+      icon: "from-blue-100 to-indigo-100 text-blue-700",
+      code: "text-blue-600",
+      department: "border-blue-100",
+    },
+  ];
+
   return (
     <div className="min-h-full bg-gradient-to-br from-orange-50 via-white to-rose-50 p-4 sm:p-6 lg:p-8">
       <div className="mx-auto max-w-7xl space-y-7">
@@ -51,16 +82,19 @@ export default function StudentCourses() {
 
           <button
             onClick={fetchCourses}
-            className="flex items-center justify-center gap-2 rounded-xl bg-orange-500 px-5 py-3 font-semibold text-white shadow-lg shadow-orange-200 transition hover:bg-orange-600"
+            disabled={loading}
+            className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-5 py-3 font-semibold text-white shadow-lg shadow-orange-200 transition hover:from-amber-600 hover:to-orange-600 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            <RefreshCw size={17} />
+            <RefreshCw size={17} className={loading ? "animate-spin" : ""} />
             Refresh
           </button>
         </div>
 
         {/* Summary */}
-        <div className="rounded-2xl bg-gradient-to-r from-orange-500 to-rose-500 p-6 text-white shadow-lg">
-          <div className="flex items-center gap-4">
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 p-6 text-white shadow-lg shadow-orange-100">
+          <div className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-white/15 blur-2xl" />
+
+          <div className="relative flex items-center gap-4">
             <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-white/20">
               <BookOpen size={30} />
             </div>
@@ -79,15 +113,20 @@ export default function StudentCourses() {
         </div>
 
         {/* Course List */}
-        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="rounded-2xl border border-orange-100 bg-white p-6 shadow-sm">
           {loading ? (
             <div className="py-14 text-center">
-              <RefreshCw className="mx-auto mb-4 animate-spin text-orange-500" size={32} />
+              <RefreshCw
+                className="mx-auto mb-4 animate-spin text-orange-500"
+                size={32}
+              />
               <p className="text-slate-500">Loading courses...</p>
             </div>
           ) : courses.length === 0 ? (
             <div className="py-14 text-center">
-              <GraduationCap className="mx-auto mb-4 text-orange-300" size={48} />
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-100 to-amber-100 text-orange-500">
+                <GraduationCap size={48} />
+              </div>
               <h3 className="text-lg font-semibold text-slate-800">
                 No courses enrolled
               </h3>
@@ -97,33 +136,39 @@ export default function StudentCourses() {
             </div>
           ) : (
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {courses.map((course) => (
-                <div
-                  key={course.id}
-                  className="rounded-2xl border border-orange-100 bg-gradient-to-br from-white to-orange-50 p-5 transition hover:-translate-y-1 hover:shadow-lg"
-                >
-                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-orange-100 text-orange-600">
-                    <BookOpen size={24} />
-                  </div>
+              {courses.map((course, index) => {
+                const accent = accents[index % accents.length];
 
-                  <h3 className="text-lg font-bold text-slate-900">
-                    {course.name}
-                  </h3>
+                return (
+                  <div
+                    key={course.id}
+                    className={`group relative overflow-hidden rounded-2xl border ${accent.border} bg-white p-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg`}
+                  >
+                    <div className={`absolute left-0 top-0 h-1 w-full bg-gradient-to-r ${accent.strip}`} />
 
-                  <p className="mt-2 text-sm font-medium text-orange-600">
-                    {course.code}
-                  </p>
+                    <div className={`mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${accent.icon} transition group-hover:scale-110`}>
+                      <BookOpen size={24} />
+                    </div>
 
-                  <div className="mt-4 border-t border-orange-100 pt-4">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
-                      Department
+                    <h3 className="text-lg font-bold text-slate-900">
+                      {course.name}
+                    </h3>
+
+                    <p className={`mt-2 text-sm font-semibold ${accent.code}`}>
+                      {course.code}
                     </p>
-                    <p className="mt-1 text-sm text-slate-600">
-                      {course.department?.name || "Not specified"}
-                    </p>
+
+                    <div className={`mt-4 border-t ${accent.department} pt-4`}>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                        Department
+                      </p>
+                      <p className="mt-1 text-sm text-slate-600">
+                        {course.department?.name || "Not specified"}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>

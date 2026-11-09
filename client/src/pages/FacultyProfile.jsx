@@ -16,26 +16,46 @@ export default function FacultyProfile() {
       label: "Full Name",
       value: user?.name || "Not available",
       icon: UserCircle,
+      color: {
+        border: "border-purple-100",
+        icon: "from-purple-100 to-violet-100 text-purple-700",
+      },
     },
     {
       label: "Email Address",
       value: user?.email || "Not available",
       icon: Mail,
+      color: {
+        border: "border-orange-100",
+        icon: "from-orange-100 to-pink-100 text-orange-700",
+      },
     },
     {
       label: "Employee ID",
       value: user?.employeeId || "Not available",
       icon: BadgeCheck,
+      color: {
+        border: "border-blue-100",
+        icon: "from-blue-100 to-cyan-100 text-blue-700",
+      },
     },
     {
       label: "Department",
       value: user?.department?.name || "Not available",
       icon: GraduationCap,
+      color: {
+        border: "border-green-100",
+        icon: "from-green-100 to-lime-100 text-green-700",
+      },
     },
     {
       label: "College",
       value: user?.college?.name || "Not available",
       icon: Building2,
+      color: {
+        border: "border-indigo-100",
+        icon: "from-indigo-100 to-blue-100 text-indigo-700",
+      },
     },
   ];
 
@@ -74,10 +94,10 @@ export default function FacultyProfile() {
               return (
                 <div
                   key={item.label}
-                  className="rounded-2xl border border-slate-100 bg-slate-50 p-5"
+                  className={`rounded-2xl border ${item.color.border} bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md`}
                 >
                   <div className="flex items-center gap-3">
-                    <div className="rounded-xl bg-teal-100 p-3 text-teal-700">
+                    <div className={`rounded-xl bg-gradient-to-br ${item.color.icon} p-3`}>
                       <Icon size={21} />
                     </div>
                     <div className="min-w-0">

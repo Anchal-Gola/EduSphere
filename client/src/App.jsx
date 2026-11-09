@@ -26,6 +26,7 @@ import FacultyProfile from "./pages/FacultyProfile";
 import FacultyStudentDetails from "./pages/FacultyStudentDetails";
 import FacultyCourseAssignments from "./pages/FacultyCourseAssignments";
 import StudentEnrollment from "./pages/StudentEnrollment";
+import LandingPage from "./pages/LandingPage";
 
 function App() {
   return (
@@ -65,7 +66,7 @@ function App() {
             </Route>
           </Route>
 
-          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="/" element={<LandingPage />} />
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </AuthProvider>

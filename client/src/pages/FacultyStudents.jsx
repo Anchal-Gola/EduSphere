@@ -49,32 +49,40 @@ export default function FacultyStudents() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-teal-50/40 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-green-50/40 p-6">
       <div className="mx-auto max-w-7xl space-y-8">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <p className="font-semibold text-teal-600">
-              Academic Workspace
-            </p>
-            <h1 className="mt-2 text-3xl font-bold text-slate-800">
-              My Students
-            </h1>
-            <p className="mt-2 text-slate-500">
-              Students enrolled in your assigned courses.
-            </p>
-          </div>
 
-          <button
-            onClick={loadStudents}
-            className="flex items-center gap-2 rounded-xl bg-teal-600 px-4 py-3 font-semibold text-white shadow-lg hover:bg-teal-700"
-          >
-            <RefreshCw size={18} /> Refresh
-          </button>
+        {/* Header */}
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-teal-500 via-emerald-500 to-teal-600 p-8 text-white shadow-xl shadow-emerald-200">
+          <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-white/15 blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-20 left-1/3 h-48 w-48 rounded-full bg-emerald-200/20 blur-3xl" />
+
+          <div className="relative flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <p className="font-semibold text-teal-50">
+                Academic Workspace
+              </p>
+              <h1 className="mt-2 text-3xl font-bold text-white">
+                My Students
+              </h1>
+              <p className="mt-2 text-teal-50">
+                Students enrolled in your assigned courses.
+              </p>
+            </div>
+
+            <button
+              onClick={loadStudents}
+              className="flex items-center gap-2 rounded-xl bg-white px-4 py-3 font-semibold text-teal-800 shadow-lg transition hover:bg-teal-50"
+            >
+              <RefreshCw size={18} /> Refresh
+            </button>
+          </div>
         </div>
 
-        <div className="rounded-2xl border border-teal-100 bg-white p-6 shadow-sm">
+        {/* Total Students */}
+        <div className="rounded-2xl border border-orange-100 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
           <div className="flex items-center gap-4">
-            <div className="rounded-xl bg-teal-100 p-3 text-teal-700">
+            <div className="rounded-xl bg-gradient-to-br from-orange-100 to-pink-100 p-3 text-orange-700">
               <Users size={26} />
             </div>
             <div>
@@ -86,9 +94,10 @@ export default function FacultyStudents() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-          <div className="flex items-center gap-3 rounded-xl border border-slate-200 px-4 py-3">
-            <Search size={20} className="text-slate-400" />
+        {/* Search */}
+        <div className="rounded-2xl border border-purple-100 bg-white p-4 shadow-sm">
+          <div className="flex items-center gap-3 rounded-xl border border-slate-200 px-4 py-3 transition focus-within:border-purple-300 focus-within:ring-4 focus-within:ring-purple-50">
+            <Search size={20} className="text-purple-600" />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -107,9 +116,9 @@ export default function FacultyStudents() {
             {error}
           </div>
         ) : filteredStudents.length === 0 ? (
-          <div className="rounded-2xl border border-slate-200 bg-white p-12 text-center">
+          <div className="rounded-2xl border border-orange-100 bg-gradient-to-br from-white to-orange-50/40 p-12 text-center shadow-sm">
             <GraduationCap
-              className="mx-auto mb-4 text-slate-400"
+              className="mx-auto mb-4 text-orange-400"
               size={45}
             />
             <h3 className="text-xl font-bold text-slate-700">
@@ -120,10 +129,10 @@ export default function FacultyStudents() {
             </p>
           </div>
         ) : (
-          <div className="overflow-hidden rounded-2xl border border-teal-100 bg-white shadow-sm">
+          <div className="overflow-hidden rounded-2xl border border-purple-100 bg-white shadow-sm">
             <div className="overflow-x-auto">
               <table className="w-full text-left">
-                <thead className="bg-teal-50 text-sm text-teal-800">
+                <thead className="bg-gradient-to-r from-purple-50 to-violet-50 text-sm text-purple-800">
                   <tr>
                     <th className="px-6 py-4">Student</th>
                     <th className="px-6 py-4">Roll Number</th>
@@ -135,7 +144,7 @@ export default function FacultyStudents() {
                   {filteredStudents.map((student) => (
                     <tr
                       key={student.id}
-                      className="hover:bg-teal-50/50"
+                      className="transition hover:bg-purple-50/50"
                     >
                       <td className="px-6 py-4 font-semibold text-slate-800">
                         {student.name}
@@ -149,7 +158,7 @@ export default function FacultyStudents() {
                       <td className="px-6 py-4">
                         <Link
                           to={`/faculty/students/${student.id}`}
-                          className="inline-flex items-center gap-2 rounded-lg bg-teal-100 px-3 py-2 text-sm font-semibold text-teal-700 hover:bg-teal-200"
+                          className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-purple-600 to-violet-500 px-3 py-2 text-sm font-semibold text-white shadow-sm transition hover:shadow-md"
                         >
                           <Eye size={16} /> View
                         </Link>

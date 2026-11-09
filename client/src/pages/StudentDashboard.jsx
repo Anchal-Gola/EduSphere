@@ -69,30 +69,38 @@ export default function StudentDashboard() {
       title: "My Courses",
       value: courseCount,
       icon: BookOpen,
-      color: "bg-amber-50 text-amber-700",
+      color: "bg-gradient-to-br from-amber-100 to-orange-100 text-orange-700",
+      border: "border-orange-100",
+      strip: "from-amber-400 to-orange-400",
     },
     {
       title: "Total Credits",
       value: totalCredits,
       icon: Award,
-      color: "bg-emerald-50 text-emerald-700",
+      color: "bg-gradient-to-br from-emerald-100 to-teal-100 text-emerald-700",
+      border: "border-emerald-100",
+      strip: "from-emerald-400 to-teal-400",
     },
     {
       title: "Department",
       value: data.department?.name || "Not assigned",
       icon: GraduationCap,
-      color: "bg-orange-50 text-orange-700",
+      color: "bg-gradient-to-br from-purple-100 to-violet-100 text-purple-700",
+      border: "border-purple-100",
+      strip: "from-purple-400 to-violet-400",
     },
     {
       title: "My College",
       value: data.college?.name || "Not assigned",
       icon: Building2,
-      color: "bg-indigo-50 text-indigo-700",
+      color: "bg-gradient-to-br from-blue-100 to-indigo-100 text-blue-700",
+      border: "border-blue-100",
+      strip: "from-blue-400 to-indigo-400",
     },
   ];
 
   return (
-    <div className="space-y-8 bg-slate-50 p-6 sm:p-8">
+    <div className="space-y-8 bg-gradient-to-br from-slate-50 via-white to-orange-50/30 p-6 sm:p-8">
       <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-amber-500 via-orange-500 to-rose-500 p-8 text-white shadow-xl shadow-orange-100">
         <div className="absolute -right-16 -top-20 h-64 w-64 rounded-full bg-white/15 blur-2xl" />
 
@@ -148,9 +156,11 @@ export default function StudentDashboard() {
             return (
               <div
                 key={card.title}
-                className="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+                className={`group relative overflow-hidden rounded-2xl border ${card.border} bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg`}
               >
-                <div className={`inline-flex rounded-xl p-3 ${card.color}`}>
+                <div className={`absolute left-0 top-0 h-1 w-full bg-gradient-to-r ${card.strip}`} />
+
+                <div className={`inline-flex rounded-xl p-3 ${card.color} transition group-hover:scale-110`}>
                   <Icon size={23} />
                 </div>
 
@@ -183,7 +193,7 @@ export default function StudentDashboard() {
             className="group flex items-center justify-between rounded-2xl border border-orange-100 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
           >
             <div className="flex items-center gap-4">
-              <div className="rounded-xl bg-orange-100 p-4 text-orange-600">
+              <div className="rounded-xl bg-gradient-to-br from-orange-100 to-amber-100 p-4 text-orange-600 transition group-hover:scale-110">
                 <BookOpen size={26} />
               </div>
               <div>
@@ -201,7 +211,7 @@ export default function StudentDashboard() {
             className="group flex items-center justify-between rounded-2xl border border-indigo-100 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
           >
             <div className="flex items-center gap-4">
-              <div className="rounded-xl bg-indigo-100 p-4 text-indigo-600">
+              <div className="rounded-xl bg-gradient-to-br from-indigo-100 to-blue-100 p-4 text-indigo-600 transition group-hover:scale-110">
                 <UserCircle size={26} />
               </div>
               <div>
@@ -216,9 +226,9 @@ export default function StudentDashboard() {
         </div>
       </section>
 
-      <section className="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">
+      <section className="rounded-2xl border border-purple-100 bg-white p-6 shadow-sm">
         <div className="flex items-center gap-3">
-          <div className="rounded-xl bg-orange-50 p-3 text-orange-700">
+          <div className="rounded-xl bg-gradient-to-br from-purple-100 to-violet-100 p-3 text-purple-700">
             <CalendarDays size={22} />
           </div>
           <div>

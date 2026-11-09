@@ -1,3 +1,4 @@
+
 import { useAuth } from "../context/AuthContext";
 import { UserCircle, Mail, GraduationCap, Hash } from "lucide-react";
 
@@ -9,26 +10,42 @@ const StudentProfile = () => {
       label: "Full Name",
       value: user?.name || "Student",
       icon: UserCircle,
+      color: {
+        border: "border-orange-100",
+        icon: "from-orange-100 to-amber-100 text-orange-700",
+      },
     },
     {
       label: "Email Address",
       value: user?.email || "Not available",
       icon: Mail,
+      color: {
+        border: "border-blue-100",
+        icon: "from-blue-100 to-indigo-100 text-blue-700",
+      },
     },
     {
       label: "Roll Number",
       value: user?.rollNumber || "Not available",
       icon: Hash,
+      color: {
+        border: "border-purple-100",
+        icon: "from-purple-100 to-violet-100 text-purple-700",
+      },
     },
     {
       label: "Student Role",
       value: "Student",
       icon: GraduationCap,
+      color: {
+        border: "border-emerald-100",
+        icon: "from-emerald-100 to-teal-100 text-emerald-700",
+      },
     },
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 bg-gradient-to-br from-slate-50 via-white to-orange-50/30 p-6">
       <div>
         <h1 className="text-3xl font-bold text-slate-800">
           My Profile
@@ -38,31 +55,35 @@ const StudentProfile = () => {
         </p>
       </div>
 
-      <div className="rounded-2xl border border-orange-100 bg-white p-8 shadow-sm">
-        <div className="mb-8 flex items-center gap-4">
-          <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-400 to-amber-500 text-white">
+      <div className="overflow-hidden rounded-2xl border border-orange-100 bg-white shadow-sm">
+        <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 p-8 text-white">
+          <div className="flex items-center gap-4">
+          <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-white/20">
             <UserCircle size={42} />
           </div>
 
           <div>
-            <h2 className="text-2xl font-bold text-slate-800">
+            <h2 className="text-2xl font-bold">
               {user?.name}
             </h2>
-            <p className="text-orange-600">Student Profile</p>
+            <p className="mt-1 text-orange-50">Student Profile</p>
           </div>
         </div>
+        </div>
 
-        <div className="grid gap-5 md:grid-cols-2">
+        <div className="grid gap-5 p-8 md:grid-cols-2">
           {details.map((item) => {
             const Icon = item.icon;
 
             return (
               <div
                 key={item.label}
-                className="rounded-xl border border-slate-100 bg-slate-50 p-5"
+                className={`rounded-2xl border ${item.color.border} bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md`}
               >
                 <div className="flex items-center gap-3">
-                  <Icon className="text-orange-500" size={20} />
+                  <div className={`rounded-xl bg-gradient-to-br ${item.color.icon} p-3`}>
+                    <Icon size={20} />
+                  </div>
                   <span className="text-sm text-slate-500">
                     {item.label}
                   </span>

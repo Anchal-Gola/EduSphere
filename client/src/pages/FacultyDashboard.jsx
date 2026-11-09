@@ -46,15 +46,23 @@ export default function FacultyDashboard() {
       title: "My Courses",
       value: data.courses ?? 0,
       icon: BookOpen,
-      color: "from-teal-500 to-emerald-500",
       link: "/faculty/courses",
+      strip: "from-purple-500 to-violet-500",
+      iconColor: "from-purple-500 to-violet-600",
+      shadow: "shadow-purple-200",
+      hover: "hover:border-purple-200 hover:shadow-purple-100/60",
+      arrow: "group-hover:text-purple-600",
     },
     {
       title: "Total Students",
       value: data.students ?? 0,
       icon: Users,
-      color: "from-indigo-500 to-violet-500",
       link: "/faculty/students",
+      strip: "from-orange-400 to-pink-500",
+      iconColor: "from-orange-500 to-pink-500",
+      shadow: "shadow-orange-200",
+      hover: "hover:border-orange-200 hover:shadow-orange-100/60",
+      arrow: "group-hover:text-orange-600",
     },
     {
       title: "Department",
@@ -63,43 +71,62 @@ export default function FacultyDashboard() {
           ? data.department?.name || "Assigned"
           : data.department || "Assigned",
       icon: GraduationCap,
-      color: "from-amber-500 to-orange-500",
       link: "/faculty/profile",
+      strip: "from-indigo-500 to-blue-500",
+      iconColor: "from-indigo-500 to-blue-600",
+      shadow: "shadow-indigo-200",
+      hover: "hover:border-indigo-200 hover:shadow-indigo-100/60",
+      arrow: "group-hover:text-indigo-600",
     },
   ];
 
   const quickLinks = [
     {
       title: "Manage Courses",
-      description: "Explore your department courses.",
+      description: "Explore and manage your department courses.",
       icon: BookOpen,
       link: "/faculty/courses",
-      color: "bg-teal-100 text-teal-700",
+      strip: "from-purple-500 to-violet-500",
+      iconColor: "from-purple-500 to-violet-600",
+      shadow: "shadow-purple-200",
+      hover: "hover:border-purple-200 hover:shadow-purple-100/60",
+      arrow: "group-hover:text-purple-600",
     },
     {
       title: "View Students",
-      description: "See students in your department.",
+      description: "See students enrolled in your department.",
       icon: Users,
       link: "/faculty/students",
-      color: "bg-indigo-100 text-indigo-700",
+      strip: "from-orange-400 to-pink-500",
+      iconColor: "from-orange-500 to-pink-500",
+      shadow: "shadow-orange-200",
+      hover: "hover:border-orange-200 hover:shadow-orange-100/60",
+      arrow: "group-hover:text-orange-600",
     },
     {
       title: "My Profile",
       description: "View your faculty information.",
       icon: ClipboardList,
       link: "/faculty/profile",
-      color: "bg-amber-100 text-amber-700",
+      strip: "from-emerald-500 to-teal-500",
+      iconColor: "from-emerald-500 to-teal-600",
+      shadow: "shadow-emerald-200",
+      hover: "hover:border-emerald-200 hover:shadow-emerald-100/60",
+      arrow: "group-hover:text-emerald-600",
     },
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-teal-50/50 p-6">
-      <div className="mx-auto max-w-7xl space-y-8">
+    <div className="min-h-full bg-transparent p-4 sm:p-6 lg:p-8">
+      <div className="mx-auto max-w-7xl space-y-7">
 
-        {/* Welcome */}
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-teal-600 via-emerald-600 to-teal-500 p-8 text-white shadow-xl shadow-teal-200/50">
+        {/* Welcome Banner */}
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-teal-500 via-emerald-500 to-teal-600 p-7 text-white shadow-xl shadow-emerald-200 md:p-9">
+          <div className="absolute -right-10 -top-20 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
+          <div className="absolute -bottom-24 left-1/3 h-48 w-48 rounded-full bg-lime-300/20 blur-3xl" />
+
           <div className="relative z-10">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-2 text-sm font-medium backdrop-blur">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/15 px-4 py-2 text-sm font-medium backdrop-blur-md">
               <Sparkles size={16} />
               Faculty Workspace
             </div>
@@ -108,14 +135,14 @@ export default function FacultyDashboard() {
               Welcome back, {user?.name || "Faculty"}!
             </h1>
 
-            <p className="mt-3 max-w-xl text-teal-50">
+            <p className="mt-3 max-w-xl text-emerald-50">
               Manage your courses, explore your students, and stay connected
               with your academic department.
             </p>
 
             <Link
               to="/faculty/courses"
-              className="mt-6 inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 font-semibold text-teal-700 shadow-lg transition hover:-translate-y-0.5 hover:bg-teal-50"
+              className="mt-6 inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 font-semibold text-emerald-800 shadow-lg transition hover:-translate-y-0.5 hover:bg-emerald-50"
             >
               Explore My Courses
               <ArrowRight size={18} />
@@ -123,15 +150,15 @@ export default function FacultyDashboard() {
           </div>
 
           <GraduationCap
-            size={180}
-            className="absolute -right-8 -bottom-10 text-white/10"
+            size={190}
+            className="absolute -bottom-10 -right-8 text-white/10"
           />
         </div>
 
-        {/* Header */}
+        {/* Academic Overview */}
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold text-slate-800">
+            <h2 className="text-2xl font-bold text-slate-900">
               Academic Overview
             </h2>
             <p className="mt-1 text-slate-500">
@@ -141,23 +168,25 @@ export default function FacultyDashboard() {
 
           <button
             onClick={loadDashboard}
-            className="flex items-center gap-2 rounded-xl border border-teal-100 bg-white px-4 py-3 font-semibold text-teal-700 shadow-sm transition hover:bg-teal-50"
+            className="flex items-center gap-2 rounded-xl border border-emerald-100 bg-white px-4 py-3 font-semibold text-emerald-700 shadow-sm transition hover:bg-emerald-50"
           >
-            <RefreshCw size={18} />
+            <RefreshCw size={17} />
             Refresh
           </button>
         </div>
 
+        {/* Stats Cards */}
         {loading ? (
-          <div className="rounded-2xl border border-teal-100 bg-white p-12 text-center text-teal-600">
+          <div className="rounded-2xl border border-emerald-100 bg-white py-20 text-center text-emerald-600 shadow-sm">
+            <RefreshCw size={28} className="mx-auto mb-3 animate-spin" />
             Loading dashboard...
           </div>
         ) : error ? (
-          <div className="rounded-2xl bg-red-50 p-6 text-red-600">
+          <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-red-600">
             {error}
           </div>
         ) : (
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="grid gap-5 md:grid-cols-3">
             {stats.map((item) => {
               const Icon = item.icon;
 
@@ -165,27 +194,32 @@ export default function FacultyDashboard() {
                 <Link
                   to={item.link}
                   key={item.title}
-                  className="group rounded-2xl border border-slate-100 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
+                  className={`group relative overflow-hidden rounded-2xl border border-purple-100 bg-white/95 p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl ${item.hover}`}
                 >
+                  <div className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${item.strip}`} />
+
                   <div className="flex items-center justify-between">
-                    <div
-                      className={`rounded-2xl bg-gradient-to-br ${item.color} p-4 text-white shadow-lg`}
-                    >
-                      <Icon size={25} />
+                    <div className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${item.iconColor} text-white shadow-md ${item.shadow}`}>
+                      <Icon size={24} />
                     </div>
+
                     <ArrowRight
                       size={20}
-                      className="text-slate-300 transition group-hover:translate-x-1 group-hover:text-teal-600"
+                      className={`text-slate-300 transition group-hover:translate-x-1 ${item.arrow}`}
                     />
                   </div>
 
-                  <p className="mt-6 text-sm font-medium text-slate-500">
+                  <p className="mt-5 text-sm font-medium text-slate-500">
                     {item.title}
                   </p>
 
-                  <h3 className="mt-2 break-words text-2xl font-bold text-slate-800">
+                  <h3 className="mt-2 break-words text-2xl font-bold text-slate-900">
                     {item.value}
                   </h3>
+
+                  <p className="mt-2 text-xs text-slate-400">
+                    View details →
+                  </p>
                 </Link>
               );
             })}
@@ -194,7 +228,7 @@ export default function FacultyDashboard() {
 
         {/* Quick Access */}
         <div>
-          <h2 className="text-2xl font-bold text-slate-800">
+          <h2 className="text-2xl font-bold text-slate-900">
             Quick Access
           </h2>
           <p className="mt-1 text-slate-500">
@@ -209,22 +243,26 @@ export default function FacultyDashboard() {
                 <Link
                   to={item.link}
                   key={item.title}
-                  className="group rounded-2xl border border-slate-100 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+                  className={`group relative overflow-hidden rounded-2xl border border-purple-100 bg-white/95 p-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl ${item.hover}`}
                 >
+                  <div className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${item.strip}`} />
+
                   <div className="flex items-center justify-between">
-                    <div className={`rounded-xl p-3 ${item.color}`}>
-                      <Icon size={24} />
+                    <div className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${item.iconColor} text-white shadow-md ${item.shadow}`}>
+                      <Icon size={23} />
                     </div>
+
                     <ArrowRight
                       size={20}
-                      className="text-slate-300 transition group-hover:translate-x-1 group-hover:text-teal-600"
+                      className={`text-slate-300 transition group-hover:translate-x-1 ${item.arrow}`}
                     />
                   </div>
 
-                  <h3 className="mt-5 font-bold text-slate-800">
+                  <h3 className="mt-5 font-bold text-slate-900">
                     {item.title}
                   </h3>
-                  <p className="mt-2 text-sm text-slate-500">
+
+                  <p className="mt-2 text-sm leading-relaxed text-slate-500">
                     {item.description}
                   </p>
                 </Link>
@@ -233,17 +271,20 @@ export default function FacultyDashboard() {
           </div>
         </div>
 
-        {/* Academic Activity */}
-        <div className="rounded-2xl border border-teal-100 bg-white p-6 shadow-sm">
-          <div className="flex items-center gap-3">
-            <div className="rounded-xl bg-teal-100 p-3 text-teal-700">
-              <CalendarDays size={24} />
+        {/* Academic Workspace */}
+        <div className="relative overflow-hidden rounded-2xl border border-emerald-100 bg-white p-6 shadow-sm">
+          <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-emerald-50 blur-2xl" />
+
+          <div className="relative flex items-center gap-4">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-200">
+              <CalendarDays size={23} />
             </div>
+
             <div>
-              <h2 className="font-bold text-slate-800">
+              <h2 className="font-bold text-slate-900">
                 Academic Workspace
               </h2>
-              <p className="text-sm text-slate-500">
+              <p className="mt-1 text-sm text-slate-500">
                 Your teaching and academic management space.
               </p>
             </div>

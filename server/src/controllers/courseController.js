@@ -30,11 +30,18 @@ const createCourse = async (req, res) => {
       course,
     });
   } catch (error) {
-    console.error("Create course error:", error);
-    res.status(500).json({
-      message: "Failed to create course. Check course code and department.",
+  console.error("Create course error:", error);
+
+  if (error.code === "P2002") {
+    return res.status(409).json({
+      message: "Course code already exists. Please use a unique code.",
     });
   }
+
+  res.status(500).json({
+    message: "Failed to create course",
+  });
+}
 };
 
 // GET COURSES
