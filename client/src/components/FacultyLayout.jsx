@@ -1,4 +1,3 @@
-
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -9,6 +8,7 @@ import {
   Menu,
   X,
   Sparkles,
+  Contact,
 } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
@@ -17,6 +17,7 @@ const navigation = [
   { name: "Dashboard", path: "/faculty", icon: LayoutDashboard },
   { name: "My Courses", path: "/faculty/courses", icon: BookOpen },
   { name: "My Students", path: "/faculty/students", icon: Users },
+  { name: "Alumni", path: "/faculty/alumni", icon: Contact },
   { name: "My Profile", path: "/faculty/profile", icon: UserCircle },
 ];
 
@@ -77,7 +78,7 @@ const FacultyLayout = () => {
         </div>
 
         {/* Navigation */}
-        <div className="px-4 py-6">
+        <div className="flex-1 overflow-y-auto px-4 py-6">
           <p className="text-[11px] font-bold text-emerald-400 uppercase tracking-[0.15em] mb-4 px-3">
             Faculty Portal
           </p>

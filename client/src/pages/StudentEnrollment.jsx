@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import api from "../lib/api";
 import {
@@ -46,6 +45,22 @@ export default function StudentEnrollment() {
     fetchData();
   }, []);
 
+  const selectedStudent = students.find((item) => item.id === studentId);
+
+  const alreadyEnrolledIds = new Set(
+    enrollments
+      .filter((item) => item.studentId === studentId)
+      .map((item) => item.courseId)
+  );
+
+  const availableCourses = selectedStudent
+    ? courses.filter(
+        (course) =>
+          course.departmentId === selectedStudent.departmentId &&
+          !alreadyEnrolledIds.has(course.id)
+      )
+    : [];
+
   const handleEnroll = async (e) => {
     e.preventDefault();
 
@@ -57,15 +72,12 @@ export default function StudentEnrollment() {
     try {
       setSaving(true);
 
-      const response = await api.post("/assignments/student-courses", {
+      await api.post("/assignments/student-courses", {
         studentId,
         courseId,
       });
 
-      console.log("ENROLLMENT CREATED:", response.data);
-
       alert("Student enrolled successfully");
-      setStudentId("");
       setCourseId("");
       fetchData();
     } catch (error) {
@@ -88,7 +100,7 @@ export default function StudentEnrollment() {
   };
 
   const selectClass =
-    "w-full rounded-xl border border-purple-100 bg-purple-50/40 px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-purple-300 focus:ring-4 focus:ring-purple-100";
+    "w-full rounded-xl border border-purple-100 bg-purple-50/40 px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-purple-300 focus:ring-4 focus:ring-purple-100 disabled:cursor-not-allowed disabled:bg-slate-100";
 
   return (
     <div className="min-h-full bg-transparent p-4 sm:p-6 lg:p-8">
@@ -148,7 +160,8 @@ export default function StudentEnrollment() {
                 Enroll a Student
               </h2>
               <p className="text-sm text-slate-500">
-                Choose a student and course below.
+                Choose a student first. Only courses from their department are
+                shown.
               </p>
             </div>
           </div>
@@ -157,7 +170,10 @@ export default function StudentEnrollment() {
             <select
               required
               value={studentId}
-              onChange={(e) => setStudentId(e.target.value)}
+              onChange={(e) => {
+                setStudentId(e.target.value);
+                setCourseId("");
+              }}
               className={selectClass}
             >
               <option value="">Select Student</option>
@@ -171,11 +187,14 @@ export default function StudentEnrollment() {
             <select
               required
               value={courseId}
+              disabled={!studentId}
               onChange={(e) => setCourseId(e.target.value)}
               className={selectClass}
             >
-              <option value="">Select Course</option>
-              {courses.map((item) => (
+              <option value="">
+                {studentId ? "Select Course" : "Select a student first"}
+              </option>
+              {availableCourses.map((item) => (
                 <option key={item.id} value={item.id}>
                   {item.name} ({item.code})
                 </option>
@@ -184,13 +203,20 @@ export default function StudentEnrollment() {
 
             <button
               type="submit"
-              disabled={saving}
+              disabled={saving || !studentId || !courseId}
               className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-violet-600 px-6 py-3 font-semibold text-white shadow-lg shadow-purple-200 transition hover:from-purple-700 hover:to-violet-700 disabled:cursor-not-allowed disabled:opacity-60"
             >
               <Plus size={18} />
               {saving ? "Enrolling..." : "Enroll Student"}
             </button>
           </div>
+
+          {studentId && availableCourses.length === 0 && (
+            <p className="mt-3 text-sm text-orange-600">
+              No courses available for this student. Either their department has
+              no courses, or they are already enrolled in all of them.
+            </p>
+          )}
         </form>
 
         {/* Existing Enrollments */}

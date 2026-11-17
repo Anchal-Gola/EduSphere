@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../lib/api";
@@ -19,8 +18,6 @@ export default function StudentDashboard() {
   const { user } = useAuth();
 
   const [data, setData] = useState({});
-  const [courseCount, setCourseCount] = useState(0);
-  const [totalCredits, setTotalCredits] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -29,28 +26,8 @@ export default function StudentDashboard() {
       setLoading(true);
       setError("");
 
-      const [dashboardResponse, coursesResponse] = await Promise.all([
-        api.get("/dashboard/student"),
-        api.get("/courses"),
-      ]);
-
-      const dashboardData =
-        dashboardResponse.data.stats || dashboardResponse.data;
-
-      setData(dashboardData);
-
-      const departmentCourses = coursesResponse.data.filter(
-        (course) => course.departmentId === user?.departmentId
-      );
-
-      setCourseCount(departmentCourses.length);
-
-      setTotalCredits(
-        departmentCourses.reduce(
-          (total, course) => total + (Number(course.credits) || 0),
-          0
-        )
-      );
+      const response = await api.get("/dashboard/student");
+      setData(response.data.stats || response.data);
     } catch (err) {
       setError(
         err.response?.data?.message || "Unable to load student dashboard."
@@ -64,10 +41,12 @@ export default function StudentDashboard() {
     loadDashboard();
   }, []);
 
+  const enrolledCourses = data.enrolledCourses || [];
+
   const cards = [
     {
       title: "My Courses",
-      value: courseCount,
+      value: data.enrolledCount ?? 0,
       icon: BookOpen,
       color: "bg-gradient-to-br from-amber-100 to-orange-100 text-orange-700",
       border: "border-orange-100",
@@ -75,7 +54,7 @@ export default function StudentDashboard() {
     },
     {
       title: "Total Credits",
-      value: totalCredits,
+      value: data.totalCredits ?? 0,
       icon: Award,
       color: "bg-gradient-to-br from-emerald-100 to-teal-100 text-emerald-700",
       border: "border-emerald-100",
@@ -179,6 +158,51 @@ export default function StudentDashboard() {
             );
           })}
         </div>
+      </section>
+
+      <section className="rounded-2xl border border-orange-100 bg-white p-6 shadow-sm">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-bold text-slate-800">
+              Enrolled Courses
+            </h2>
+            <p className="mt-1 text-sm text-slate-500">
+              Courses you are currently enrolled in
+            </p>
+          </div>
+
+          <Link
+            to="/student/courses"
+            className="text-sm font-semibold text-orange-600 hover:underline"
+          >
+            View all
+          </Link>
+        </div>
+
+        {loading ? (
+          <div className="mt-5 h-24 animate-pulse rounded-xl bg-orange-50" />
+        ) : enrolledCourses.length === 0 ? (
+          <p className="mt-5 rounded-xl bg-orange-50/60 py-8 text-center text-sm text-slate-500">
+            You are not enrolled in any course yet.
+          </p>
+        ) : (
+          <div className="mt-5 grid gap-3 sm:grid-cols-2">
+            {enrolledCourses.map((course) => (
+              <div
+                key={course.id}
+                className="flex items-center justify-between rounded-xl border border-orange-100 bg-orange-50/40 px-4 py-3"
+              >
+                <div>
+                  <p className="font-semibold text-slate-800">{course.name}</p>
+                  <p className="text-xs text-slate-500">{course.code}</p>
+                </div>
+                <span className="rounded-lg bg-white px-3 py-1 text-sm font-bold text-orange-700 shadow-sm">
+                  {course.credits} cr
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
       </section>
 
       <section>

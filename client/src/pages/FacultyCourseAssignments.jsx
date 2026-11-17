@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import api from "../lib/api";
 import {
@@ -46,6 +45,22 @@ export default function FacultyCourseAssignments() {
     fetchData();
   }, []);
 
+  const selectedFaculty = faculty.find((item) => item.id === facultyId);
+
+  const alreadyAssignedIds = new Set(
+    assignments
+      .filter((item) => item.facultyId === facultyId)
+      .map((item) => item.courseId)
+  );
+
+  const availableCourses = selectedFaculty
+    ? courses.filter(
+        (course) =>
+          course.departmentId === selectedFaculty.departmentId &&
+          !alreadyAssignedIds.has(course.id)
+      )
+    : [];
+
   const handleAssign = async (e) => {
     e.preventDefault();
 
@@ -63,7 +78,6 @@ export default function FacultyCourseAssignments() {
       });
 
       alert("Course assigned successfully");
-      setFacultyId("");
       setCourseId("");
       fetchData();
     } catch (error) {
@@ -86,7 +100,7 @@ export default function FacultyCourseAssignments() {
   };
 
   const selectClass =
-    "w-full rounded-xl border border-purple-100 bg-purple-50/40 px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-purple-300 focus:ring-4 focus:ring-purple-100";
+    "w-full rounded-xl border border-purple-100 bg-purple-50/40 px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-purple-300 focus:ring-4 focus:ring-purple-100 disabled:cursor-not-allowed disabled:bg-slate-100";
 
   return (
     <div className="min-h-full bg-transparent p-4 sm:p-6 lg:p-8">
@@ -146,7 +160,8 @@ export default function FacultyCourseAssignments() {
                 Assign a Course
               </h2>
               <p className="text-sm text-slate-500">
-                Choose faculty and course below.
+                Choose a faculty member first. Only courses from their
+                department are shown.
               </p>
             </div>
           </div>
@@ -155,7 +170,10 @@ export default function FacultyCourseAssignments() {
             <select
               required
               value={facultyId}
-              onChange={(e) => setFacultyId(e.target.value)}
+              onChange={(e) => {
+                setFacultyId(e.target.value);
+                setCourseId("");
+              }}
               className={selectClass}
             >
               <option value="">Select Faculty</option>
@@ -169,11 +187,14 @@ export default function FacultyCourseAssignments() {
             <select
               required
               value={courseId}
+              disabled={!facultyId}
               onChange={(e) => setCourseId(e.target.value)}
               className={selectClass}
             >
-              <option value="">Select Course</option>
-              {courses.map((item) => (
+              <option value="">
+                {facultyId ? "Select Course" : "Select faculty first"}
+              </option>
+              {availableCourses.map((item) => (
                 <option key={item.id} value={item.id}>
                   {item.name} ({item.code})
                 </option>
@@ -182,13 +203,20 @@ export default function FacultyCourseAssignments() {
 
             <button
               type="submit"
-              disabled={saving}
+              disabled={saving || !facultyId || !courseId}
               className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-violet-600 px-6 py-3 font-semibold text-white shadow-lg shadow-purple-200 transition hover:from-purple-700 hover:to-violet-700 disabled:cursor-not-allowed disabled:opacity-60"
             >
               <Plus size={18} />
               {saving ? "Assigning..." : "Assign Course"}
             </button>
           </div>
+
+          {facultyId && availableCourses.length === 0 && (
+            <p className="mt-3 text-sm text-orange-600">
+              No courses available for this faculty member. Either their
+              department has no courses, or all are already assigned to them.
+            </p>
+          )}
         </form>
 
         {/* Existing Assignments */}

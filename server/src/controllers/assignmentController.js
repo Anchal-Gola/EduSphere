@@ -1,4 +1,3 @@
-
 const prisma = require("../lib/prisma");
 
 // ADMIN: GET FACULTY COURSE ASSIGNMENTS
@@ -43,10 +42,31 @@ const assignCourse = async (req, res) => {
       });
     }
 
+    const [faculty, course] = await Promise.all([
+      prisma.faculty.findUnique({ where: { id: facultyId } }),
+      prisma.course.findUnique({ where: { id: courseId } }),
+    ]);
+
+    if (!faculty) {
+      return res.status(404).json({ message: "Faculty not found" });
+    }
+
+    if (!course) {
+      return res.status(404).json({ message: "Course not found" });
+    }
+
+    if (faculty.departmentId !== course.departmentId) {
+      return res.status(400).json({
+        message: "Faculty can only be assigned courses from their own department",
+      });
+    }
+
     const assignment = await prisma.facultyCourse.create({
       data: { facultyId, courseId },
       include: {
-        faculty: true,
+        faculty: {
+          select: { id: true, name: true, email: true, employeeId: true },
+        },
         course: { include: { department: true } },
       },
     });
@@ -56,9 +76,15 @@ const assignCourse = async (req, res) => {
       assignment,
     });
   } catch (error) {
+    if (error.code === "P2002") {
+      return res.status(409).json({
+        message: "This course is already assigned to this faculty member",
+      });
+    }
+
     console.error("Assign course error:", error);
-    res.status(400).json({
-      message: "Failed to assign course. It may already be assigned.",
+    res.status(500).json({
+      message: "Failed to assign course",
     });
   }
 };
@@ -119,10 +145,31 @@ const enrollStudent = async (req, res) => {
       });
     }
 
+    const [student, course] = await Promise.all([
+      prisma.student.findUnique({ where: { id: studentId } }),
+      prisma.course.findUnique({ where: { id: courseId } }),
+    ]);
+
+    if (!student) {
+      return res.status(404).json({ message: "Student not found" });
+    }
+
+    if (!course) {
+      return res.status(404).json({ message: "Course not found" });
+    }
+
+    if (student.departmentId !== course.departmentId) {
+      return res.status(400).json({
+        message: "Student can only be enrolled in courses from their own department",
+      });
+    }
+
     const enrollment = await prisma.studentCourse.create({
       data: { studentId, courseId },
       include: {
-        student: true,
+        student: {
+          select: { id: true, name: true, email: true, rollNumber: true },
+        },
         course: { include: { department: true } },
       },
     });
@@ -132,9 +179,15 @@ const enrollStudent = async (req, res) => {
       enrollment,
     });
   } catch (error) {
+    if (error.code === "P2002") {
+      return res.status(409).json({
+        message: "This student is already enrolled in this course",
+      });
+    }
+
     console.error("Enroll student error:", error);
-    res.status(400).json({
-      message: "Failed to enroll student. They may already be enrolled.",
+    res.status(500).json({
+      message: "Failed to enroll student",
     });
   }
 };
@@ -220,7 +273,8 @@ const getMyFacultyStudents = async (req, res) => {
     assignments.forEach((assignment) => {
       assignment.course.enrollments.forEach((enrollment) => {
         if (enrollment.student) {
-          studentsMap.set(enrollment.student.id, enrollment.student);
+          const { password, ...safeStudent } = enrollment.student;
+          studentsMap.set(safeStudent.id, safeStudent);
         }
       });
     });

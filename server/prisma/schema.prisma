@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -23,6 +22,7 @@ model College {
   departments Department[]
   students    Student[]
   faculty     Faculty[]
+  alumni      Alumni[]
   createdAt   DateTime     @default(now())
 }
 
@@ -35,22 +35,32 @@ model Department {
   courses   Course[]
   faculty   Faculty[]
   students  Student[]
+  alumni    Alumni[]
 
   @@unique([code, collegeId])
 }
 
 model Student {
   id           String         @id @default(uuid())
-  name         String
-  email        String         @unique
-  password     String
-  rollNumber  String         @unique
-  collegeId    String
-  departmentId  String
-  college      College        @relation(fields: [collegeId], references: [id])
-  department   Department     @relation(fields: [departmentId], references: [id])
-  enrollments StudentCourse[]
-  createdAt    DateTime       @default(now())
+  name          String
+  email         String         @unique
+  password      String
+  rollNumber   String         @unique
+  phone         String?
+  profilePhoto  String?
+  dateOfBirth  DateTime?
+  gender        String?
+  address       String?
+  collegeId     String
+  departmentId   String
+  college       College        @relation(fields: [collegeId], references: [id])
+  department    Department     @relation(fields: [departmentId], references: [id])
+  enrollments  StudentCourse[]
+  fees          Fee[]
+  opportunityApplications OpportunityApplication[]
+  clubMemberships ClubMember[]
+  eventRegistrations EventRegistration[]
+  createdAt     DateTime       @default(now())
 }
 
 model Faculty {
@@ -59,6 +69,13 @@ model Faculty {
   email             String          @unique
   password          String
   employeeId        String          @unique
+  phone             String?
+  profilePhoto      String?
+  dateOfBirth       DateTime?
+  gender            String?
+  address           String?
+  designation        String?
+  qualification     String?
   collegeId         String
   departmentId       String
   college            College         @relation(fields: [collegeId], references: [id])
@@ -98,4 +115,130 @@ model StudentCourse {
   createdAt DateTime @default(now())
 
   @@unique([studentId, courseId])
+}
+
+model Fee {
+  id            String    @id @default(uuid())
+  studentId     String
+  student       Student   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  title         String
+  amount        Int
+  dueDate       DateTime
+  status        String    @default("PENDING")
+  paidAt        DateTime?
+  paymentMethod String?
+  receiptNumber String?   @unique
+  createdAt     DateTime  @default(now())
+}
+
+model Opportunity {
+  id           String   @id @default(uuid())
+  title        String
+  type         String
+  organization String
+  description  String
+  location     String?
+  benefit      String?
+  link         String?
+  deadline     DateTime
+  createdAt    DateTime @default(now())
+
+  applications OpportunityApplication[]
+}
+
+model OpportunityApplication {
+  id            String      @id @default(uuid())
+  opportunityId String
+  studentId     String
+  status        String      @default("APPLIED")
+  createdAt     DateTime    @default(now())
+
+  opportunity   Opportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  student       Student     @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([opportunityId, studentId])
+}
+
+model Club {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String
+  category    String
+  createdAt   DateTime @default(now())
+
+  members     ClubMember[]
+  events      Event[]
+}
+
+model ClubMember {
+  id        String   @id @default(uuid())
+  clubId    String
+  studentId String
+  createdAt DateTime @default(now())
+
+  club      Club     @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([clubId, studentId])
+}
+
+model Event {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  venue       String
+  date        DateTime
+  clubId      String?
+  createdAt   DateTime @default(now())
+
+  club          Club?    @relation(fields: [clubId], references: [id], onDelete: SetNull)
+  registrations EventRegistration[]
+}
+
+model EventRegistration {
+  id        String   @id @default(uuid())
+  eventId   String
+  studentId String
+  createdAt DateTime @default(now())
+
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, studentId])
+}
+
+model Alumni {
+  id             String     @id @default(uuid())
+  name           String
+  email          String     @unique
+  phone          String?
+  profilePhoto   String?
+  graduationYear Int
+  departmentId   String
+  department     Department @relation(fields: [departmentId], references: [id])
+  collegeId      String
+  college        College    @relation(fields: [collegeId], references: [id])
+  company        String?
+  jobTitle       String?
+  location       String?
+  linkedin       String?
+  bio            String?
+  createdAt      DateTime   @default(now())
+}
+
+model AlumniRequest {
+  id             String   @id @default(uuid())
+  name           String
+  email          String   @unique
+  phone          String?
+  graduationYear Int
+  departmentId   String
+  collegeId      String
+  company        String?
+  jobTitle       String?
+  location       String?
+  linkedin       String?
+  bio            String?
+  status         String   @default("PENDING")
+  createdAt      DateTime @default(now())
 }

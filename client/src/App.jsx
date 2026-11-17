@@ -1,4 +1,3 @@
-
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -26,6 +25,17 @@ import FacultyProfile from "./pages/FacultyProfile";
 import FacultyStudentDetails from "./pages/FacultyStudentDetails";
 import FacultyCourseAssignments from "./pages/FacultyCourseAssignments";
 import StudentEnrollment from "./pages/StudentEnrollment";
+import FeeManagement from "./pages/FeeManagement";
+import StudentFees from "./pages/StudentFees";
+import OpportunityManagement from "./pages/OpportunityManagement";
+import StudentOpportunities from "./pages/StudentOpportunities";
+import ClubManagement from "./pages/ClubManagement";
+import EventManagement from "./pages/EventManagement";
+import StudentClubs from "./pages/StudentClubs";
+import StudentEvents from "./pages/StudentEvents";
+import AlumniManagement from "./pages/AlumniManagement";
+import AlumniDirectory from "./pages/AlumniDirectory";
+import AlumniRequestForm from "./pages/AlumniRequestForm";
 import LandingPage from "./pages/LandingPage";
 
 function App() {
@@ -34,6 +44,7 @@ function App() {
       <AuthProvider>
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/alumni/join" element={<AlumniRequestForm />} />
 
           <Route element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>
             <Route path="/admin" element={<AdminLayout />}>
@@ -45,6 +56,11 @@ function App() {
               <Route path="students" element={<Students />} />
               <Route path="assignments" element={<FacultyCourseAssignments />} />
               <Route path="enrollments" element={<StudentEnrollment />} />
+              <Route path="fees" element={<FeeManagement />} />
+              <Route path="opportunities" element={<OpportunityManagement />} />
+              <Route path="clubs" element={<ClubManagement />} />
+              <Route path="events" element={<EventManagement />} />
+              <Route path="alumni" element={<AlumniManagement />} />
             </Route>
           </Route>
 
@@ -54,6 +70,7 @@ function App() {
               <Route path="courses" element={<FacultyCourses />} />
               <Route path="students" element={<FacultyStudents />} />
               <Route path="students/:id" element={<FacultyStudentDetails />} />
+              <Route path="alumni" element={<AlumniDirectory />} />
               <Route path="profile" element={<FacultyProfile />} />
             </Route>
           </Route>
@@ -62,6 +79,11 @@ function App() {
             <Route path="/student" element={<StudentLayout />}>
               <Route index element={<StudentDashboard />} />
               <Route path="courses" element={<StudentCourses />} />
+              <Route path="fees" element={<StudentFees />} />
+              <Route path="opportunities" element={<StudentOpportunities />} />
+              <Route path="clubs" element={<StudentClubs />} />
+              <Route path="events" element={<StudentEvents />} />
+              <Route path="alumni" element={<AlumniDirectory />} />
               <Route path="profile" element={<StudentProfile />} />
             </Route>
           </Route>

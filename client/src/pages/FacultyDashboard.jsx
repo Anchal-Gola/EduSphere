@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../lib/api";
@@ -12,6 +11,7 @@ import {
   ArrowRight,
   CalendarDays,
   ClipboardList,
+  Award,
 } from "lucide-react";
 
 export default function FacultyDashboard() {
@@ -41,6 +41,9 @@ export default function FacultyDashboard() {
     loadDashboard();
   }, []);
 
+  const courseList = data.courseList || [];
+  const maxEnrolled = Math.max(1, ...courseList.map((c) => c.enrolledStudents));
+
   const stats = [
     {
       title: "My Courses",
@@ -63,6 +66,17 @@ export default function FacultyDashboard() {
       shadow: "shadow-orange-200",
       hover: "hover:border-orange-200 hover:shadow-orange-100/60",
       arrow: "group-hover:text-orange-600",
+    },
+    {
+      title: "Total Credits",
+      value: data.totalCredits ?? 0,
+      icon: Award,
+      link: "/faculty/courses",
+      strip: "from-emerald-500 to-teal-500",
+      iconColor: "from-emerald-500 to-teal-600",
+      shadow: "shadow-emerald-200",
+      hover: "hover:border-emerald-200 hover:shadow-emerald-100/60",
+      arrow: "group-hover:text-emerald-600",
     },
     {
       title: "Department",
@@ -186,7 +200,7 @@ export default function FacultyDashboard() {
             {error}
           </div>
         ) : (
-          <div className="grid gap-5 md:grid-cols-3">
+          <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
             {stats.map((item) => {
               const Icon = item.icon;
 
@@ -223,6 +237,61 @@ export default function FacultyDashboard() {
                 </Link>
               );
             })}
+          </div>
+        )}
+
+        {/* Assigned Courses */}
+        {!loading && !error && (
+          <div className="rounded-2xl border border-emerald-100 bg-white p-6 shadow-sm">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-xl font-bold text-slate-900">
+                  My Assigned Courses
+                </h2>
+                <p className="mt-1 text-sm text-slate-500">
+                  Courses you teach and how many students are enrolled
+                </p>
+              </div>
+
+              <Link
+                to="/faculty/courses"
+                className="text-sm font-semibold text-emerald-600 hover:underline"
+              >
+                View all
+              </Link>
+            </div>
+
+            {courseList.length === 0 ? (
+              <p className="mt-5 rounded-xl bg-emerald-50/60 py-8 text-center text-sm text-slate-500">
+                No courses are assigned to you yet.
+              </p>
+            ) : (
+              <div className="mt-5 space-y-4">
+                {courseList.map((course) => (
+                  <div key={course.id}>
+                    <div className="mb-1.5 flex items-center justify-between text-sm">
+                      <span className="font-medium text-slate-700">
+                        {course.name}
+                        <span className="ml-2 text-xs text-slate-400">
+                          {course.code} · {course.credits} cr
+                        </span>
+                      </span>
+                      <span className="text-xs text-slate-500">
+                        {course.enrolledStudents} students
+                      </span>
+                    </div>
+                    <div className="h-2.5 w-full rounded-full bg-emerald-50">
+                      <div
+                        className="h-2.5 rounded-full bg-gradient-to-r from-teal-500 to-emerald-400"
+                        style={{
+                          width: `${(course.enrolledStudents / maxEnrolled) * 100}%`,
+                        }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 

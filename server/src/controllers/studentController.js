@@ -93,10 +93,58 @@ const deleteStudent = async (req, res) => {
     res.status(400).json({ message: "Failed to delete student" });
   }
 };
+// GET MY PROFILE
+const getMyStudentProfile = async (req, res) => {
+  try {
+    const student = await prisma.student.findUnique({
+      where: { id: req.user.id },
+      include: { college: true, department: true },
+    });
+
+    if (!student) {
+      return res.status(404).json({ message: "Student not found" });
+    }
+
+    const { password, ...profile } = student;
+    res.json(profile);
+  } catch (error) {
+    console.error("Get student profile error:", error);
+    res.status(500).json({ message: "Failed to fetch profile" });
+  }
+};
+
+// UPDATE MY PROFILE
+const updateMyStudentProfile = async (req, res) => {
+  try {
+    const { phone, profilePhoto, dateOfBirth, gender, address } = req.body;
+
+    const student = await prisma.student.update({
+      where: { id: req.user.id },
+      data: {
+        phone,
+        profilePhoto,
+        dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
+        gender,
+        address,
+      },
+    });
+
+    const { password, ...profile } = student;
+    res.json({
+      message: "Profile updated successfully",
+      profile,
+    });
+  } catch (error) {
+    console.error("Update student profile error:", error);
+    res.status(500).json({ message: "Failed to update profile" });
+  }
+};
 
 module.exports = {
   createStudent,
   getStudents,
   updateStudent,
   deleteStudent,
+  getMyStudentProfile,
+  updateMyStudentProfile,
 };

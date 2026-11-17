@@ -1,4 +1,3 @@
-
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import {
@@ -14,6 +13,11 @@ import {
   ClipboardList,
   UserPlus,
   Sparkles,
+  Wallet,
+  Briefcase,
+  UsersRound,
+  CalendarDays,
+  Contact,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -26,6 +30,11 @@ const navigation = [
   { name: "Students", path: "/admin/students", icon: UserRound },
   { name: "Course Assignments", path: "/admin/assignments", icon: ClipboardList },
   { name: "Student Enrollment", path: "/admin/enrollments", icon: UserPlus },
+  { name: "Fees", path: "/admin/fees", icon: Wallet },
+  { name: "Opportunities", path: "/admin/opportunities", icon: Briefcase },
+  { name: "Clubs", path: "/admin/clubs", icon: UsersRound },
+  { name: "Events", path: "/admin/events", icon: CalendarDays },
+  { name: "Alumni", path: "/admin/alumni", icon: Contact },
 ];
 
 function AdminLayout() {
@@ -83,7 +92,7 @@ function AdminLayout() {
         </div>
 
         {/* Navigation */}
-        <div className="px-4 py-6">
+        <div className="flex-1 overflow-y-auto px-4 py-6">
           <p className="text-[11px] font-bold text-violet-400 uppercase tracking-[0.15em] mb-4 px-3">
             Administration
           </p>

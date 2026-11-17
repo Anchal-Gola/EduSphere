@@ -13,6 +13,12 @@ const studentRoutes = require("./routes/studentRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
 const roleDashboardRoutes = require("./routes/roleDashboardRoutes");
 const assignmentRoutes = require("./routes/assignmentRoutes");
+const analyticsRoutes = require("./routes/analyticsRoutes");
+const feeRoutes = require("./routes/feeRoutes");
+const opportunityRoutes = require("./routes/opportunityRoutes");
+const clubRoutes = require("./routes/ClubRoutes");
+const eventRoutes = require("./routes/EventRoutes");
+const alumniRoutes = require("./routes/alumniRoutes");
 
 const app = express();
 
@@ -36,6 +42,12 @@ app.use("/api/students", studentRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/dashboard", roleDashboardRoutes);
 app.use("/api/assignments", assignmentRoutes);
+app.use("/api/analytics", analyticsRoutes);
+app.use("/api/fees", feeRoutes);
+app.use("/api/opportunities", opportunityRoutes);
+app.use("/api/clubs", clubRoutes);
+app.use("/api/events", eventRoutes);
+app.use("/api/alumni", alumniRoutes);
 
 // Health check
 app.get("/", async (req, res) => {

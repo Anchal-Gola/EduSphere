@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import api from "../lib/api";
 import {
@@ -30,6 +29,8 @@ export default function Faculty() {
   const [colleges, setColleges] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [search, setSearch] = useState("");
+  const [collegeFilter, setCollegeFilter] = useState("");
+  const [departmentFilter, setDepartmentFilter] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState(emptyForm);
@@ -124,14 +125,31 @@ export default function Faculty() {
   const filteredFaculty = faculty.filter((item) => {
     const query = search.toLowerCase();
 
-    return (
+    const matchesSearch =
       item.name.toLowerCase().includes(query) ||
       item.email.toLowerCase().includes(query) ||
       item.employeeId.toLowerCase().includes(query) ||
       item.department?.name?.toLowerCase().includes(query) ||
-      item.college?.name?.toLowerCase().includes(query)
-    );
+      item.college?.name?.toLowerCase().includes(query);
+
+    const matchesCollege = !collegeFilter || item.collegeId === collegeFilter;
+    const matchesDepartment =
+      !departmentFilter || item.departmentId === departmentFilter;
+
+    return matchesSearch && matchesCollege && matchesDepartment;
   });
+
+  const filterDepartments = departments.filter(
+    (department) => !collegeFilter || department.collegeId === collegeFilter
+  );
+
+  const hasActiveFilters = search || collegeFilter || departmentFilter;
+
+  const clearFilters = () => {
+    setSearch("");
+    setCollegeFilter("");
+    setDepartmentFilter("");
+  };
 
   const selectedDepartments = departments.filter(
     (department) => department.collegeId === form.collegeId
@@ -178,29 +196,76 @@ export default function Faculty() {
           </div>
         </div>
 
-        {/* Search and Refresh */}
-        <div className="flex flex-col gap-3 rounded-2xl border border-purple-100 bg-white/90 p-4 shadow-sm backdrop-blur-sm sm:flex-row">
-          <div className="relative flex-1">
-            <Search
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-purple-400"
-              size={19}
-            />
+        {/* Search, Filters and Refresh */}
+        <div className="space-y-3 rounded-2xl border border-purple-100 bg-white/90 p-4 shadow-sm backdrop-blur-sm">
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <div className="relative flex-1">
+              <Search
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-purple-400"
+                size={19}
+              />
 
-            <input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search faculty, email, employee ID or department..."
-              className="w-full rounded-xl border border-purple-100 bg-purple-50/40 py-3 pl-10 pr-4 outline-none transition focus:border-purple-400 focus:ring-4 focus:ring-purple-100"
-            />
+              <input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search faculty, email, employee ID or department..."
+                className="w-full rounded-xl border border-purple-100 bg-purple-50/40 py-3 pl-10 pr-4 outline-none transition focus:border-purple-400 focus:ring-4 focus:ring-purple-100"
+              />
+            </div>
+
+            <button
+              onClick={fetchData}
+              className="flex items-center justify-center gap-2 rounded-xl border border-purple-100 px-4 py-3 font-medium text-purple-700 transition hover:bg-purple-50"
+            >
+              <RefreshCw size={17} />
+              Refresh
+            </button>
           </div>
 
-          <button
-            onClick={fetchData}
-            className="flex items-center justify-center gap-2 rounded-xl border border-purple-100 px-4 py-3 font-medium text-purple-700 transition hover:bg-purple-50"
-          >
-            <RefreshCw size={17} />
-            Refresh
-          </button>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <select
+              value={collegeFilter}
+              onChange={(e) => {
+                setCollegeFilter(e.target.value);
+                setDepartmentFilter("");
+              }}
+              className="w-full rounded-xl border border-purple-100 bg-white px-4 py-3 text-sm outline-none transition focus:border-purple-400 focus:ring-4 focus:ring-purple-100 sm:w-60"
+            >
+              <option value="">All colleges</option>
+              {colleges.map((college) => (
+                <option key={college.id} value={college.id}>
+                  {college.name}
+                </option>
+              ))}
+            </select>
+
+            <select
+              value={departmentFilter}
+              onChange={(e) => setDepartmentFilter(e.target.value)}
+              className="w-full rounded-xl border border-purple-100 bg-white px-4 py-3 text-sm outline-none transition focus:border-purple-400 focus:ring-4 focus:ring-purple-100 sm:w-60"
+            >
+              <option value="">All departments</option>
+              {filterDepartments.map((department) => (
+                <option key={department.id} value={department.id}>
+                  {department.name}
+                </option>
+              ))}
+            </select>
+
+            {hasActiveFilters && (
+              <button
+                onClick={clearFilters}
+                className="flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-medium text-rose-500 transition hover:bg-rose-50"
+              >
+                <X size={16} />
+                Clear filters
+              </button>
+            )}
+
+            <p className="text-sm text-slate-500 sm:ml-auto">
+              Showing {filteredFaculty.length} of {faculty.length} faculty
+            </p>
+          </div>
         </div>
 
         {/* Faculty Cards */}
@@ -220,10 +285,10 @@ export default function Faculty() {
             </h3>
 
             <p className="mt-2 text-slate-500">
-              Add faculty or try another search.
+              Add faculty or try another search or filter.
             </p>
 
-            {!search && (
+            {!hasActiveFilters && (
               <button
                 onClick={openCreateModal}
                 className="mt-5 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-violet-600 px-4 py-2.5 font-semibold text-white shadow-md shadow-purple-200 transition hover:shadow-lg"

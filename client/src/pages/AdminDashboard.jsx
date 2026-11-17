@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../lib/api";
@@ -14,6 +13,8 @@ import {
   ShieldCheck,
   Zap,
   ChevronRight,
+  TrendingUp,
+  AlertTriangle,
 } from "lucide-react";
 
 const statCards = [
@@ -32,10 +33,32 @@ const quickActions = [
   { title: "Manage Students", description: "Manage student profiles and enrollment.", icon: Users, link: "/admin/students", color: "from-pink-400 to-rose-500" },
 ];
 
+const insightItems = [
+  { key: "studentsWithoutEnrollment", label: "Students with no courses" },
+  { key: "facultyWithoutCourses", label: "Faculty with no courses" },
+  { key: "coursesWithoutFaculty", label: "Courses with no faculty" },
+  { key: "coursesWithoutStudents", label: "Courses with no students" },
+  { key: "departmentsWithoutFaculty", label: "Departments with no faculty" },
+  { key: "departmentsWithoutStudents", label: "Departments with no students" },
+];
+
+const monthLabel = (value) =>
+  new Date(`${value}-01T00:00:00Z`).toLocaleString("en-US", {
+    month: "short",
+    timeZone: "UTC",
+  });
+
 export default function AdminDashboard() {
   const [stats, setStats] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const [growth, setGrowth] = useState([]);
+  const [insights, setInsights] = useState({});
+  const [departments, setDepartments] = useState([]);
+  const [topCourses, setTopCourses] = useState([]);
+  const [analyticsLoading, setAnalyticsLoading] = useState(true);
+  const [analyticsError, setAnalyticsError] = useState("");
 
   const fetchStats = async () => {
     try {
@@ -50,9 +73,49 @@ export default function AdminDashboard() {
     }
   };
 
+  const fetchAnalytics = async () => {
+    try {
+      setAnalyticsLoading(true);
+      setAnalyticsError("");
+
+      const [growthRes, insightsRes, departmentsRes, coursesRes] = await Promise.all([
+        api.get("/analytics/growth?months=6"),
+        api.get("/analytics/insights"),
+        api.get("/analytics/departments"),
+        api.get("/analytics/courses"),
+      ]);
+
+      setGrowth(growthRes.data || []);
+      setInsights(insightsRes.data || {});
+      setDepartments(
+        [...(departmentsRes.data || [])]
+          .sort((a, b) => b.students - a.students)
+          .slice(0, 6)
+      );
+      setTopCourses((coursesRes.data?.topCourses || []).slice(0, 5));
+    } catch (err) {
+      setAnalyticsError(err.response?.data?.message || "Unable to load analytics.");
+    } finally {
+      setAnalyticsLoading(false);
+    }
+  };
+
+  const refreshAll = () => {
+    fetchStats();
+    fetchAnalytics();
+  };
+
   useEffect(() => {
     fetchStats();
+    fetchAnalytics();
   }, []);
+
+  const growthMax = Math.max(
+    1,
+    ...growth.map((m) => Math.max(m.students, m.faculty))
+  );
+  const deptMax = Math.max(1, ...departments.map((d) => d.students));
+  const courseMax = Math.max(1, ...topCourses.map((c) => c.enrolledStudents));
 
   return (
     <div className="min-h-full bg-transparent p-4 pb-6 sm:p-6 lg:p-8">
@@ -94,11 +157,14 @@ export default function AdminDashboard() {
 
             <button
               type="button"
-              onClick={fetchStats}
-              disabled={loading}
+              onClick={refreshAll}
+              disabled={loading || analyticsLoading}
               className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-300 to-orange-300 px-5 py-3 text-sm font-bold text-orange-950 shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl disabled:opacity-60"
             >
-              <RefreshCw size={16} className={loading ? "animate-spin" : ""} />
+              <RefreshCw
+                size={16}
+                className={loading || analyticsLoading ? "animate-spin" : ""}
+              />
               Refresh Dashboard
             </button>
           </div>
@@ -192,6 +258,200 @@ export default function AdminDashboard() {
                 </Link>
               );
             })}
+          </div>
+        </section>
+
+        {/* Analytics & Insights */}
+        <section>
+          <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <div className="mb-2 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-purple-500">
+                <span className="h-1.5 w-1.5 rounded-full bg-orange-400" />
+                Analytics
+              </div>
+              <h2 className="text-2xl font-bold tracking-tight text-slate-900">
+                Analytics & Insights
+              </h2>
+              <p className="mt-1.5 text-sm text-slate-500">
+                Growth, distribution and items that need attention.
+              </p>
+            </div>
+
+            <div className="inline-flex items-center gap-2 rounded-full border border-purple-100 bg-white/90 px-4 py-2 text-xs font-medium text-purple-600 shadow-sm">
+              <TrendingUp size={14} />
+              Last 6 months
+            </div>
+          </div>
+
+          {analyticsError && (
+            <div className="mb-4 flex items-center justify-between rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-600">
+              <span>{analyticsError}</span>
+              <button type="button" onClick={fetchAnalytics} className="font-semibold underline">
+                Retry
+              </button>
+            </div>
+          )}
+
+          {/* Insights */}
+          <div className="mb-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {insightItems.map((item) => {
+              const value = insights[item.key] ?? 0;
+              const needsAttention = value > 0;
+
+              return (
+                <div
+                  key={item.key}
+                  className="flex items-center justify-between rounded-2xl border border-purple-100 bg-white/95 p-4 shadow-sm"
+                >
+                  <div className="flex items-center gap-3">
+                    <div
+                      className={`flex h-10 w-10 items-center justify-center rounded-xl ${
+                        needsAttention
+                          ? "bg-orange-50 text-orange-500"
+                          : "bg-emerald-50 text-emerald-500"
+                      }`}
+                    >
+                      <AlertTriangle size={19} />
+                    </div>
+                    <p className="text-sm font-medium text-slate-600">{item.label}</p>
+                  </div>
+                  <p className="text-2xl font-extrabold text-slate-900">
+                    {analyticsLoading ? (
+                      <span className="inline-block h-7 w-8 animate-pulse rounded-md bg-purple-50" />
+                    ) : (
+                      value
+                    )}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="grid gap-5 xl:grid-cols-2">
+            {/* Growth */}
+            <div className="rounded-2xl border border-purple-100 bg-white/95 p-5 shadow-sm">
+              <div className="mb-4 flex items-center justify-between">
+                <h3 className="font-semibold text-slate-900">Monthly Growth</h3>
+                <div className="flex items-center gap-4 text-xs text-slate-500">
+                  <span className="inline-flex items-center gap-1.5">
+                    <span className="h-2.5 w-2.5 rounded-full bg-purple-500" />
+                    Students
+                  </span>
+                  <span className="inline-flex items-center gap-1.5">
+                    <span className="h-2.5 w-2.5 rounded-full bg-orange-400" />
+                    Faculty
+                  </span>
+                </div>
+              </div>
+
+              {analyticsLoading ? (
+                <div className="h-48 animate-pulse rounded-xl bg-purple-50" />
+              ) : growth.length === 0 ? (
+                <p className="py-10 text-center text-sm text-slate-400">No data yet.</p>
+              ) : (
+                <div className="flex h-48 items-end justify-between gap-3">
+                  {growth.map((m) => (
+                    <div key={m.month} className="flex h-full flex-1 flex-col justify-end">
+                      <div className="flex flex-1 items-end justify-center gap-1.5">
+                        <div className="flex h-full flex-col items-center justify-end">
+                          <span className="mb-1 text-[11px] font-semibold text-slate-600">
+                            {m.students}
+                          </span>
+                          <div
+                            className="w-4 rounded-t-md bg-gradient-to-t from-purple-500 to-fuchsia-400 sm:w-5"
+                            style={{ height: `${Math.max((m.students / growthMax) * 80, 2)}%` }}
+                          />
+                        </div>
+                        <div className="flex h-full flex-col items-center justify-end">
+                          <span className="mb-1 text-[11px] font-semibold text-slate-600">
+                            {m.faculty}
+                          </span>
+                          <div
+                            className="w-4 rounded-t-md bg-gradient-to-t from-orange-400 to-amber-300 sm:w-5"
+                            style={{ height: `${Math.max((m.faculty / growthMax) * 80, 2)}%` }}
+                          />
+                        </div>
+                      </div>
+                      <p className="mt-2 text-center text-xs text-slate-500">
+                        {monthLabel(m.month)}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Students per department */}
+            <div className="rounded-2xl border border-purple-100 bg-white/95 p-5 shadow-sm">
+              <h3 className="mb-4 font-semibold text-slate-900">
+                Students by Department
+              </h3>
+
+              {analyticsLoading ? (
+                <div className="h-48 animate-pulse rounded-xl bg-purple-50" />
+              ) : departments.length === 0 ? (
+                <p className="py-10 text-center text-sm text-slate-400">No departments yet.</p>
+              ) : (
+                <div className="space-y-4">
+                  {departments.map((d) => (
+                    <div key={d.id}>
+                      <div className="mb-1.5 flex items-center justify-between text-sm">
+                        <span className="font-medium text-slate-700">
+                          {d.name}
+                          <span className="ml-2 text-xs text-slate-400">
+                            {d.college?.name}
+                          </span>
+                        </span>
+                        <span className="text-xs text-slate-500">
+                          {d.students} students · {d.faculty} faculty
+                        </span>
+                      </div>
+                      <div className="h-2.5 w-full rounded-full bg-purple-50">
+                        <div
+                          className="h-2.5 rounded-full bg-gradient-to-r from-purple-500 to-fuchsia-400"
+                          style={{ width: `${(d.students / deptMax) * 100}%` }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Top courses */}
+            <div className="rounded-2xl border border-purple-100 bg-white/95 p-5 shadow-sm xl:col-span-2">
+              <h3 className="mb-4 font-semibold text-slate-900">
+                Top Courses by Enrollment
+              </h3>
+
+              {analyticsLoading ? (
+                <div className="h-32 animate-pulse rounded-xl bg-purple-50" />
+              ) : topCourses.length === 0 ? (
+                <p className="py-6 text-center text-sm text-slate-400">No courses yet.</p>
+              ) : (
+                <div className="space-y-4">
+                  {topCourses.map((c) => (
+                    <div key={c.id}>
+                      <div className="mb-1.5 flex items-center justify-between text-sm">
+                        <span className="font-medium text-slate-700">
+                          {c.name}
+                          <span className="ml-2 text-xs text-slate-400">{c.code}</span>
+                        </span>
+                        <span className="text-xs text-slate-500">
+                          {c.enrolledStudents} enrolled · {c.assignedFaculty} faculty
+                        </span>
+                      </div>
+                      <div className="h-2.5 w-full rounded-full bg-orange-50">
+                        <div
+                          className="h-2.5 rounded-full bg-gradient-to-r from-orange-400 to-pink-400"
+                          style={{ width: `${(c.enrolledStudents / courseMax) * 100}%` }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </section>
 

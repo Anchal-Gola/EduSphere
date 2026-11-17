@@ -1,4 +1,3 @@
-
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -8,6 +7,11 @@ import {
   Menu,
   X,
   Sparkles,
+  Wallet,
+  Briefcase,
+  UsersRound,
+  CalendarDays,
+  Contact,
 } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
@@ -15,6 +19,11 @@ import { useAuth } from "../context/AuthContext";
 const navigation = [
   { name: "Dashboard", path: "/student", icon: LayoutDashboard },
   { name: "My Courses", path: "/student/courses", icon: BookOpen },
+  { name: "My Fees", path: "/student/fees", icon: Wallet },
+  { name: "Opportunities", path: "/student/opportunities", icon: Briefcase },
+  { name: "Clubs", path: "/student/clubs", icon: UsersRound },
+  { name: "Events", path: "/student/events", icon: CalendarDays },
+  { name: "Alumni", path: "/student/alumni", icon: Contact },
   { name: "My Profile", path: "/student/profile", icon: UserCircle },
 ];
 
@@ -75,7 +84,7 @@ export default function StudentLayout() {
         </div>
 
         {/* Navigation */}
-        <div className="px-4 py-6">
+        <div className="flex-1 overflow-y-auto px-4 py-6">
           <p className="text-[11px] font-bold text-orange-400 uppercase tracking-[0.15em] mb-4 px-3">
             Student Portal
           </p>

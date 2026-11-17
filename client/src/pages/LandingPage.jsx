@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -9,6 +8,7 @@ import {
   Sparkles,
   ShieldCheck,
   LayoutDashboard,
+  UserPlus,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 
@@ -46,14 +46,30 @@ export default function LandingPage() {
           <a href="#about" className="transition hover:text-blue-600">
             About
           </a>
+          <Link
+            to="/alumni/join"
+            className="transition hover:text-blue-600"
+          >
+            Alumni
+          </Link>
         </nav>
 
-        <Link
-          to="/login"
-          className="rounded-full border border-blue-200 bg-white/80 px-6 py-2.5 text-sm font-semibold text-blue-700 transition hover:border-blue-500 hover:bg-blue-50"
-        >
-          Sign In <ArrowRight className="ml-1 inline h-4 w-4" />
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link
+            to="/alumni/join"
+            className="hidden rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-orange-200 transition hover:-translate-y-0.5 hover:shadow-lg sm:inline-flex sm:items-center"
+          >
+            <UserPlus className="mr-1 h-4 w-4" />
+            Join Alumni
+          </Link>
+
+          <Link
+            to="/login"
+            className="rounded-full border border-blue-200 bg-white/80 px-6 py-2.5 text-sm font-semibold text-blue-700 transition hover:border-blue-500 hover:bg-blue-50"
+          >
+            Sign In <ArrowRight className="ml-1 inline h-4 w-4" />
+          </Link>
+        </div>
       </header>
 
       {/* Hero */}
@@ -100,6 +116,14 @@ export default function LandingPage() {
             >
               Get Started
               <ArrowRight className="h-5 w-5 transition group-hover:translate-x-1" />
+            </Link>
+
+            <Link
+              to="/alumni/join"
+              className="inline-flex items-center gap-2 rounded-full border border-amber-200 bg-white px-7 py-4 font-semibold text-orange-600 shadow-sm transition hover:-translate-y-1 hover:border-orange-300 hover:shadow-md"
+            >
+              <UserPlus className="h-5 w-5" />
+              Join Alumni Network
             </Link>
 
             <a
@@ -257,18 +281,33 @@ export default function LandingPage() {
           <p className="mx-auto mt-4 max-w-xl text-white/90">
             Bring your college community together with EduSphere.
           </p>
-          <Link
-            to="/login"
-            className="mt-8 inline-flex items-center gap-3 rounded-full bg-white px-7 py-4 font-semibold text-orange-600 transition hover:-translate-y-1 hover:shadow-lg"
-          >
-            Get Started <ArrowRight className="h-5 w-5" />
-          </Link>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+            <Link
+              to="/login"
+              className="inline-flex items-center gap-3 rounded-full bg-white px-7 py-4 font-semibold text-orange-600 transition hover:-translate-y-1 hover:shadow-lg"
+            >
+              Get Started <ArrowRight className="h-5 w-5" />
+            </Link>
+            <Link
+              to="/alumni/join"
+              className="inline-flex items-center gap-2 rounded-full border-2 border-white/70 bg-white/10 px-7 py-4 font-semibold text-white backdrop-blur transition hover:-translate-y-1 hover:bg-white/20"
+            >
+              <UserPlus className="h-5 w-5" />
+              Join Alumni Network
+            </Link>
+          </div>
         </div>
       </section>
 
       {/* Footer */}
       <footer className="border-t border-slate-200 bg-white/70 px-6 py-8 text-center text-sm text-slate-500">
-        © {new Date().getFullYear()} EduSphere · Smarter Campus Management
+        © {new Date().getFullYear()} EduSphere · Smarter Campus Management ·{" "}
+        <Link
+          to="/alumni/join"
+          className="font-semibold text-orange-600 hover:underline"
+        >
+          Alumni Join
+        </Link>
       </footer>
     </div>
   );
