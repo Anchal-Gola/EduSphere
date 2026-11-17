@@ -75,7 +75,7 @@ EduSphere/
 ### 1️⃣ Clone the repository
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/Anchal-Gola/EduSphere
 cd EduSphere
 2️⃣ Setup Backend
 bash
