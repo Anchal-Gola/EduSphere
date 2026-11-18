@@ -71,7 +71,6 @@ Client → Route → Controller → Prisma Client → PostgreSQL
 *   Git
 
 ### 1. Clone the repository
-```bash
 git clone https://github.com/Anchal-Gola/EduSphere.git
 cd EduSphere
 
@@ -126,23 +125,23 @@ Watch Demo Video
 
 **Landing Page**
 *The entry point for all users, featuring a modern design and quick access.*
-![EduSphere Landing Page](screenshots/landingPage.png)
+![EduSphere Landing Page](../screenshots/landingPage.png)
 
 **Login Portal**
 *Unified login page with role-based access for Admin, Faculty, and Student.*
-![EduSphere Login Page](screenshots/login.png)
+![EduSphere Login Page](../screenshots/login.png)
 
 **Admin Dashboard**
 *Complete overview of campus analytics, departments, and growth metrics.*
-![Admin Dashboard](screenshots/adminDashboard.png)
+![Admin Dashboard](../screenshots/adminDashboard.png)
 
 **Faculty Dashboard**
 *Faculty workspace to manage courses, view students, and track credits.*
-![Faculty Dashboard](screenshots/facultyDashboard.png)
+![Faculty Dashboard](../screenshots/facultyDashboard.png)
 
 **Student Dashboard**
 *Student portal to access enrolled courses, fees, opportunities, and events.*
-![Student Dashboard](screenshots/studentDashboard.png)
+![Student Dashboard](../screenshots/studentDashboard.png)
 
 Live application: [EduSphere](https://edu-sphere-six.vercel.app/)
 
