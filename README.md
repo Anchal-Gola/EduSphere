@@ -120,29 +120,29 @@ Ensure CORS in the backend is configured to accept your Vercel frontend URL.
 🎥 EduSphere Demo
 Watch the full walkthrough of EduSphere here:
 Watch Demo Video
-## 📸 Screenshots
 
-**Landing Page**
-*The entry point for all users, featuring a modern design and quick access.*
-![EduSphere Landing Page](../screenshots/landingPage.png)
+📸 Screenshots
+Landing Page
+The entry point for all users, featuring a modern design and quick access.
+https://screenshots/landingPage.png
 
-**Login Portal**
-*Unified login page with role-based access for Admin, Faculty, and Student.*
-![EduSphere Login Page](../screenshots/login.png)
+Login Portal
+Unified login page with role-based access for Admin, Faculty, and Student.
+https://screenshots/login.png
 
-**Admin Dashboard**
-*Complete overview of campus analytics, departments, and growth metrics.*
-![Admin Dashboard](../screenshots/adminDashboard.png)
+Admin Dashboard
+Complete overview of campus analytics, departments, and growth metrics.
+https://screenshots/adminDashboard.png
 
-**Faculty Dashboard**
-*Faculty workspace to manage courses, view students, and track credits.*
-![Faculty Dashboard](../screenshots/facultyDashboard.png)
+Faculty Dashboard
+Faculty workspace to manage courses, view students, and track credits.
+https://screenshots/facultyDashboard.png
 
-**Student Dashboard**
-*Student portal to access enrolled courses, fees, opportunities, and events.*
-![Student Dashboard](../screenshots/studentDashboard.png)
+Student Dashboard
+Student portal to access enrolled courses, fees, opportunities, and events.
+https://screenshots/studentDashboard.png
 
-Live application: [EduSphere](https://edu-sphere-six.vercel.app/)
+Live application: EduSphere
 
 🎯 Project Goal
 EduSphere aims to provide a unified digital workspace where educational institutions can streamline operations, faculty can manage their courses, and students can easily access their academic information, events, and opportunities.
@@ -155,5 +155,4 @@ GitHub: Anchal-Gola
 Project: EduSphere Repository
 
 Built as a hands-on full-stack development project.
-
 
