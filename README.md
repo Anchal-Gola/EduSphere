@@ -1,207 +1,161 @@
-# 🎓 EduSphere
+# EduSphere — Smarter Campus Management
 
-### Smarter Campus Management — One Platform for Students, Faculty & Administration
+EduSphere is a full-stack college management system designed to bring administration, faculty, and students into one connected digital campus. It simplifies academic operations, fee tracking, campus events, and alumni networking in a single unified platform.
 
-A full-stack college management system that brings **administration, faculty, and students** into one connected digital campus.
-
-![React](https://img.shields.io/badge/React-18-61DAFB?style=flat-square&logo=react&logoColor=white)
-![Node.js](https://img.shields.io/badge/Node.js-Express-339933?style=flat-square&logo=node.js&logoColor=white)
-![Prisma](https://img.shields.io/badge/Prisma-ORM-2D3748?style=flat-square&logo=prisma&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-4169E1?style=flat-square&logo=postgresql&logoColor=white)
-![TailwindCSS](https://img.shields.io/badge/Tailwind-CSS-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)
+🔗 **Live Demo:** [Open EduSphere](https://edu-sphere-six.vercel.app/)  
+💻 **GitHub Repository:** [View Source Code](https://github.com/Anchal-Gola/EduSphere)  
+🎥 **Demo Video:** [Watch the Walkthrough](https://drive.google.com/file/d/1RuKImY4MIDjJjoejiNrIxbE7Sa9dU1Zo/view?usp=drive_link)
 
 ---
 
 ## ✨ Features
 
-| Module | Description |
-|---|---|
-| 🔐 Authentication | Role-based login for Admin, Faculty, and Student with JWT |
-| 🏫 College Management | Manage colleges, departments, courses, faculty & students |
-| 📚 Course Assignment | Assign faculty to courses & enroll students |
-| 💰 Fee Management | Assign fees, track payments, mark paid, generate receipts |
-| 💼 Opportunities | Placements, internships, scholarships & workshops with applications |
-| 🎭 Clubs & Events | Create clubs, join/leave, create events, register/unregister |
-| 🎓 Alumni Network | Alumni directory + self-enrollment with admin approval |
-| 📊 Analytics Dashboard | Role-wise insights and statistics |
+*   **Role-Based Authentication** — Secure JWT login for Admin, Faculty, and Student portals.
+*   **Admin Dashboard** — Centralized control to manage colleges, departments, courses, faculty, and students.
+*   **Student Management** — Complete student profiles, enrollment tracking, and academic records.
+*   **Fee Management** — Assign fees, track payments, mark as paid, and generate printable receipts.
+*   **Opportunities Board** — Post and apply for placements, internships, scholarships, and workshops.
+*   **Clubs & Events** — Create clubs, join/leave memberships, and manage event registrations.
+*   **Alumni Network** — Directory to view alumni, plus a public self-enrollment form with an admin approval workflow.
+*   **Analytics & Insights** — Role-specific dashboards providing quick campus statistics.
+*   **Responsive UI** — Distinct and modern color themes for each portal (Purple for Admin, Emerald for Faculty, Orange for Students).
 
 ---
 
 ## 🛠️ Tech Stack
 
 **Frontend**
-- React 18 + Vite
-- Tailwind CSS
-- Framer Motion
-- React Router DOM
-- Axios
-- Lucide React (icons)
+*   React 18
+*   JavaScript
+*   Vite
+*   Tailwind CSS
+*   React Router DOM
+*   Axios
+*   Framer Motion
+*   Lucide React
 
 **Backend**
-- Node.js + Express
-- PostgreSQL + Prisma ORM
-- JWT Authentication + bcrypt
-- Role-based middleware
+*   Node.js
+*   Express.js
+*   PostgreSQL
+*   Prisma ORM
+*   JWT Authentication
+*   bcrypt
+
+**Deployment**
+*   Frontend: Vercel
+*   Backend: Render
+*   Database: Prisma Postgres (Cloud)
 
 ---
 
-## 📁 Project Structure
-EduSphere/
-├── client/ # React frontend
-│ ├── src/
-│ │ ├── components/ # Layouts & reusable UI
-│ │ ├── context/ # Auth context
-│ │ ├── lib/ # Axios instance
-│ │ └── pages/ # All pages (admin/faculty/student)
-│ └── package.json
-│
-└── server/ # Express backend
-├── controllers/ # Business logic
-├── middleware/ # Auth & role checks
-├── prisma/
-│ └── schema.prisma # Database schema
-├── routes/ # API routes
-├── lib/
-│ └── prisma.js # Prisma client
-└── package.json
+## 🏗️ Architecture
 
-## 🚀 Getting Started
+EduSphere follows a clean separation of concerns, routing requests through a structured backend.
 
-### Prerequisites
-- Node.js (v18+)
-- PostgreSQL
-- npm / yarn
+**Request flow:**
+Client → Route → Controller → Prisma Client → PostgreSQL
 
-### 1️⃣ Clone the repository
+*   **Routes:** Define API endpoints and attach role-based middleware.
+*   **Controllers:** Handle incoming requests, business logic, and responses.
+*   **Prisma Client:** Manages database queries and relations.
+*   **Database:** PostgreSQL schema modeling all entities (Users, Fees, Events, Alumni, etc.).
 
+---
+
+## 🚀 Run Locally
+
+**Prerequisites**
+*   Node.js and npm
+*   PostgreSQL database (local or cloud)
+*   Git
+
+### 1. Clone the repository
 ```bash
-git clone https://github.com/Anchal-Gola/EduSphere
+git clone https://github.com/Anchal-Gola/EduSphere.git
 cd EduSphere
-2️⃣ Setup Backend
-bash
+
+2. Set up the backend
 cd server
 npm install
-Create .env file in server/:
+Create a .env file inside the server directory:
 
-env
 DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/edusphere"
-JWT_SECRET="your_super_secret_key"
+JWT_SECRET="your_secure_jwt_secret"
 PORT=5000
-Run migrations & generate Prisma client:
 
-bash
+Run migrations & generate Prisma client:
 npx prisma migrate dev
 npx prisma generate
-Start backend:
 
-bash
+Start the backend:
 npm run dev
-Backend runs at http://localhost:5000
 
-3️⃣ Setup Frontend
+3. Set up the frontend
+Open another terminal:
+
 bash
-cd ../client
+cd client
 npm install
+Create a .env file inside client:
+
+env
+VITE_API_URL=http://localhost:5000/api
+Start the frontend:
+
+bash
 npm run dev
-Frontend runs at http://localhost:5173
+Open http://localhost:5173 in your browser.
 
-🔑 Default Routes
-Role	URL
-Landing Page	/
-Login	/login
-Admin Panel	/admin
-Faculty Panel	/faculty
-Student Panel	/student
-Alumni Self-Enroll	/alumni/join
-🔌 API Endpoints (Overview)
-text
-POST   /api/auth/login
+🔐 Environment Variables
+Keep credentials and secrets private.
 
-# Core
-GET/POST/PUT/DELETE  /api/colleges
-GET/POST/PUT/DELETE  /api/departments
-GET/POST/PUT/DELETE  /api/courses
-GET/POST/PUT/DELETE  /api/faculty
-GET/POST/PUT/DELETE  /api/students
-GET/POST/PUT/DELETE  /api/assignments
-GET/POST/PUT/DELETE  /api/enrollments
+Never commit .env files.
 
-# Fees
-GET/POST/PUT/DELETE  /api/fees
-GET                  /api/fees/my
-PUT                  /api/fees/:id/pay
+Never expose JWT_SECRET or DATABASE_URL in frontend code.
 
-# Opportunities
-GET/POST/PUT/DELETE  /api/opportunities
-POST                 /api/opportunities/:id/apply
+Use environment variables in Vercel and Render for production configuration.
 
-# Clubs
-GET/POST/PUT/DELETE  /api/clubs
-POST                 /api/clubs/:id/join
-DELETE               /api/clubs/:id/leave
+Ensure CORS in the backend is configured to accept your Vercel frontend URL.
 
-# Events
-GET/POST/PUT/DELETE  /api/events
-POST                 /api/events/:id/register
-DELETE               /api/events/:id/register
+🎥 EduSphere Demo
+Watch the full walkthrough of EduSphere here:
+Watch Demo Video
 
-# Alumni
-POST                 /api/alumni/request        (public)
-GET                  /api/alumni/public-options  (public)
-GET                  /api/alumni
-GET                  /api/alumni/requests
-PUT                  /api/alumni/requests/:id/approve
-PUT                  /api/alumni/requests/:id/reject
-🗄️ Database Models
-Admin · College · Department · Student · Faculty · Course
-FacultyCourse · StudentCourse · Fee · Opportunity · OpportunityApplication
-Club · ClubMember · Event · EventRegistration · Alumni · AlumniRequest
+## 📸 Screenshots
 
-🎨 Design System
-Each role has a distinct color palette for a clear, role-based experience:
+**Landing Page**
+*The entry point for all users, featuring a modern design and quick access.*
+![EduSphere Landing Page](./screenshots/landingPage.png)
 
-   Role	         Theme	            Gradient
-🛡️ Admin	   Purple / Violet     	#312e81 → #7c3aed
-🌱 Faculty	  Emerald / Teal	    #10b981 → #14b8a6
-🍊 Student	  Orange / Amber     	#f97316 → #f59e0b
-🌐 Public	  Amber / Orange    	#f59e0b → #f97316
+**Login Portal**
+*Unified login page with role-based access for Admin, Faculty, and Student.*
+![EduSphere Login Page](./screenshots/login.png)
 
-✅ Completed Modules
-☑ Authentication & Role-based Access
-☑ Profile Management (Admin / Faculty / Student)
-☑ Analytics & Insights Dashboards
-☑ Fee Management (with receipts)
-☑ Opportunities (placements, internships, scholarships)
-☑ Clubs & Events
-☑ Alumni Network (with approval workflow)
-☑ UI Integration & Responsive Design
+**Admin Dashboard**
+*Complete overview of campus analytics, departments, and growth metrics.*
+![Admin Dashboard](./screenshots/adminDashboard.png)
 
-🧪 Testing Checklist
-Manual E2E testing covered for:
+**Faculty Dashboard**
+*Faculty workspace to manage courses, view students, and track credits.*
+![Faculty Dashboard](./screenshots/facultyDashboard.png)
 
-Auth & protected routes
+**Student Dashboard**
+*Student portal to access enrolled courses, fees, opportunities, and events.*
+![Student Dashboard](./screenshots/studentDashboard.png)
 
-CRUD operations across all modules
+Live application: [EduSphere](https://edu-sphere-six.vercel.app/)
 
-Fee payment + receipt printing
+🎯 Project Goal
+EduSphere aims to provide a unified digital workspace where educational institutions can streamline operations, faculty can manage their courses, and students can easily access their academic information, events, and opportunities.
 
-Opportunity applications + status changes
+👩‍💻 Developer
+Anchal Gola
 
-Club join/leave + member viewing
+GitHub: Anchal-Gola
 
-Event registration + cancellation
+Project: EduSphere Repository
 
-Alumni request → approval → directory
+Built as a hands-on full-stack development project.
 
-Responsive UI across devices
-
-🤝 Contributing
-Contributions, issues, and feature requests are welcome!
-Feel free to fork this project and submit a pull request.
-
-📄 License
-This project is open-source and available under the MIT License.
-
-🌟 If you found this project helpful, give it a star!
-EduSphere · Smarter Campus Management
 
