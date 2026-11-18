@@ -22,13 +22,10 @@ const alumniRoutes = require("./routes/alumniRoutes");
 
 const app = express();
 
-// Middleware
+// Middleware - Allow all origins (fixes Vercel preview links too)
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://edu-sphere-six.vercel.app/", // <-- Yahan apna Vercel URL daalo
-    ],
+    origin: true, 
     credentials: true,
   })
 );
