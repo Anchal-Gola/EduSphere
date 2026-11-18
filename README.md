@@ -120,8 +120,7 @@ Ensure CORS in the backend is configured to accept your Vercel frontend URL.
 🎥 EduSphere Demo
 Watch the full walkthrough of EduSphere here:
 Watch Demo Video
-
-## 📸 Screenshots and demo
+## 📸 Screenshots
 
 **Landing Page**
 *The entry point for all users, featuring a modern design and quick access.*
